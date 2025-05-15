@@ -17,7 +17,7 @@ const char* string[] = {"", "Hora de navegar!", "Todos a bordo?",
 "Selecione uma","casa amarela","Duas escolhas","te aguardam:","Clique no barco",
 "e mude de lugar","ou aperte duas","vezes para jogar","Barco cancelado!","Vamos de novo",
 "Hora de iniciar","a pontaria!","Sua vez de jogar","marujo!","Respire fundo...","vez do oponente",
-"Sem sorte...","agua!","Acertou o trecho","do navio inimigo","Bom tiro, marujo","acertou o barco!",
+"Sem sorte...","Agua!","Acertou o trecho","do navio inimigo","Bom tiro, marujo","acertou o barco!",
 "Acertaram parte","do seu navio!","O inimigo achou","o seu barco!","Jogue de novo!","Boa jogada!",
 "Essa casa ta","ocupada, marujo!","Bom jogo! Vamos","jogar de novo?","Vitoria, marujo!","Bom trabalho",
 "Tente novamente:","Casa ocupada","Um clique de","cada vez marujo!"};
