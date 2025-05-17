@@ -109,7 +109,7 @@ void lightDiagonal(Adafruit_NeoPixel &strip, int pos, uint32_t color) {
 }
 
 void loop() {
-  // Animação para J1
+  // Animação diagonal para J1
   for (int i = 0; i < 6; i++) {
     clearPixels(pixelsJ1);
     lightDiagonal(pixelsJ1, i, corAzulEscuro);
@@ -121,7 +121,7 @@ void loop() {
     delay(100);
   }
 
-  // Animação para J2
+  // Animação diagonal para J2
   for (int i = 0; i < 6; i++) {
     clearPixels(pixelsJ2);
     lightDiagonal(pixelsJ2, i, corAzulClaro);
