@@ -1,9 +1,5 @@
 #include <Adafruit_NeoPixel.h>
 
-// Coisas a testar:
-// Se o código das diagonais está funcionando e se suas cores estão mostrando.
-// Fazer com que o padrão de luz standby não limpe as casas verdes -> se a coordenada da casa que for acender for true no barcosJ1/J2 pular?
-
 // Pin do led do jogador 1
 #define LEDPINJ1 1
 // Pin do led do jogador 2
@@ -45,17 +41,17 @@ Adafruit_NeoPixel pixelsJ2 = Adafruit_NeoPixel(NUMPIXELS, LEDPINJ2, NEO_RGB + NE
 #define BC6J2 26
 
 // Cores do jogador 1
-byte azulClaro[60];
-byte verdeJ1[12];
-byte laranjaJ1[12];
+int azulClaro[60];
+int verdeJ1[12];
+int laranjaJ1[12];
 
 // Cores do jogador 2
-byte azulEscuro[60];
-byte verdeJ2[12];
-byte laranjaJ2[12];
+int azulEscuro[60];
+int verdeJ2[12];
+int laranjaJ2[12];
 
 // Matriz de tradução das coordenadas para o LED específico
-byte matrizLeds[6][6] = {
+int matrizLeds[6][6] = {
   { 0, 1, 2, 3, 4, 5 },
   { 6, 7, 8, 9, 10, 11 },
   { 12, 13, 14, 15, 16, 17 },
@@ -70,25 +66,25 @@ bool barcosJ1[6][6] = {};
 bool barcosJ2[6][6] = {};
 
 // Número de barcos do jogador 1
-byte barcosRestantesJ1 = 6;
+int barcosRestantesJ1 = 6;
 // Número de barcos do jogador 2
-byte barcosRestantesJ2 = 6;
+int barcosRestantesJ2 = 6;
 
 // Coordenadas antes de serem assinaladas uma cor
-byte coordLinha;
-byte coordColuna;
+int coordLinha;
+int coordColuna;
 
 // Variáveis de auxílio no acionamento das luzes na posição de barcos
-byte posicaoVelha;
-byte posicaoAtual;
-byte apagar;
+int posicaoVelha;
+int posicaoAtual;
+int apagar;
 int diferenca;
 
-byte contAcertosJ1;
-byte contErrosJ1;
+int contAcertosJ1;
+int contErrosJ1;
 
-byte contAcertosJ2;
-byte contErrosJ2;
+int contAcertosJ2;
+int contErrosJ2;
 
 uint32_t corAzulEscuro = pixelsJ1.Color(0, 0, 139);
 uint32_t corAzulClaro = pixelsJ2.Color(173, 216, 230);
@@ -338,6 +334,80 @@ void segundaCasaApagar(int diferenca, int jogador) {
   }
 }
 
+// Adiciona valores às listas
+void appendCoordenadas(int linha, int coluna, int lista[], int* totalPares, int tamanhoMaximo) {
+  int index = (*totalPares) * 2;  // cada par ocupa 2 posições
+  if (index + 1 < tamanhoMaximo) {
+    lista[index] = linha;
+    lista[index + 1] = coluna;
+    (*totalPares)++;
+  } else {
+    // Lista cheia, não adiciona nada
+    // Pode acionar alerta aqui, se necessário
+  }
+}
+
+// Mostrar a cor dos LEDs
+void coresAcender(int jogador, bool palpites) {
+  if (jogador == 1 && palpites == true) {
+    // Turno de palpites jogador 1
+    for (int p = 0; p < contErrosJ1; p++) {
+      pixelsJ1.setPixelColor(posicao(azulClaro[p * 2], azulClaro[p * 2 + 1]), corAzulClaro);
+    }
+
+    for (int p = 0; p < contAcertosJ1; p++) {
+      pixelsJ1.setPixelColor(posicao(laranjaJ2[p * 2], laranjaJ2[p * 2 + 1]), corLaranja);
+    }
+
+    pixelsJ1.show();
+
+  } else if (jogador == 1 && palpites == false) {
+    // Turno de defesa jogador 1
+    for (int p = 0; p < 6; p++) {
+      pixelsJ1.setPixelColor(posicao(verdeJ1[p * 2], verdeJ1[p * 2 + 1]), corVerde);
+    }
+
+    for (int p = 0; p < contErrosJ2; p++) {
+      pixelsJ1.setPixelColor(posicao(azulEscuro[p * 2], azulEscuro[p * 2 + 1]), corAzulClaro);
+    }
+
+    for (int p = 0; p < contAcertosJ2; p++) {
+      pixelsJ1.setPixelColor(posicao(laranjaJ2[p * 2], laranjaJ2[p * 2 + 1]), corLaranja);
+    }
+
+    pixelsJ1.show();
+
+  } else if (jogador == 2 && palpites == true) {
+    // Turno de palpites jogador 2
+    for (int p = 0; p < contErrosJ2; p++) {
+      pixelsJ2.setPixelColor(posicao(azulEscuro[p * 2], azulEscuro[p * 2 + 1]), corAzulEscuro);
+    }
+
+    for (int p = 0; p < contAcertosJ2; p++) {
+      pixelsJ2.setPixelColor(posicao(laranjaJ1[p * 2], laranjaJ1[p * 2 + 1]), corLaranja);
+    }
+
+    pixelsJ2.show();
+
+  } else if (jogador == 2 && palpites == false) {
+    // Turno de defesa jogador 2
+    for (int p = 0; p < 6; p++) {
+      pixelsJ2.setPixelColor(posicao(verdeJ2[p * 2], verdeJ2[p * 2 + 1]), corVerde);
+    }
+
+    for (int p = 0; p < contErrosJ1; p++) {
+      pixelsJ2.setPixelColor(posicao(azulClaro[p * 2], azulClaro[p * 2 + 1]), corAzulEscuro);
+    }
+
+    for (int p = 0; p < contAcertosJ1; p++) {
+      pixelsJ2.setPixelColor(posicao(laranjaJ2[p * 2], laranjaJ2[p * 2 + 1]), corLaranja);
+    }
+
+    pixelsJ2.show();
+  }
+}
+
+
 void loop() {
   // Animação diagonal para J1
   for (int i = 0; i < 6; i++) {
@@ -365,7 +435,7 @@ void loop() {
 
   delay(1000);
 
-  //Fase de seleção de barcos do J1
+  //Fase de seleção de barcos
   for (int z = 0; z < 6; z++) {  // São selecionados 6 casas, por isso repete 6 vezes
     if (z == 0) {                // O padrão de cores muda de casa pra casa, então deve-se checar qual está sendo selecionada
       // Novas coordenadas
@@ -403,7 +473,7 @@ void loop() {
       barcosJ1[coordLinha][coordColuna] = true;
       verdeJ1[2] = coordLinha;
       verdeJ1[3] = coordColuna;
-      posicaoAtual = posicao(coordLinha, coordColuna); 
+      posicaoAtual = posicao(coordLinha, coordColuna);
 
       // Acendendo os LEDs atrelados ao barco novo
       pixelsJ1.setPixelColor(posicaoAtual, corVerde);
@@ -486,185 +556,198 @@ void loop() {
       pixelsJ1.setPixelColor(posicaoAtual, corVerde);
       pixelsJ1.show();
     }
+  }
 
-    //Fase de seleção de barcos do J2
-    for (int z = 0; z < 6; z++) {  // São selecionados 6 casas, por isso repete 6 vezes
-      if (z == 0) {                // O padrão de cores muda de casa pra casa, então deve-se checar qual está sendo selecionada
-        // Novas coordenadas
-        coordLinha = detectarCoordLinha(2, true);
-        coordColuna = detectarCoordColuna(2, true);
+  //Fase de seleção de barcos do J2
+  for (int z = 0; z < 6; z++) {  // São selecionados 6 casas, por isso repete 6 vezes
+    if (z == 0) {                // O padrão de cores muda de casa pra casa, então deve-se checar qual está sendo selecionada
+      // Novas coordenadas
+      coordLinha = detectarCoordLinha(2, true);
+      coordColuna = detectarCoordColuna(2, true);
 
-        // Endereçando o barco novo
-        barcosJ2[coordLinha][coordColuna] = true;
-        verdeJ2[0] = coordLinha;
-        verdeJ2[1] = coordColuna;
-        posicaoAtual = posicao(coordLinha, coordColuna);
+      // Endereçando o barco novo
+      barcosJ2[coordLinha][coordColuna] = true;
+      verdeJ2[0] = coordLinha;
+      verdeJ2[1] = coordColuna;
+      posicaoAtual = posicao(coordLinha, coordColuna);
 
-        // Acendendo os LEDs atrelados ao barco novo
-        pixelsJ2.setPixelColor(posicaoAtual, corVerde);
-        pixelsJ2.setPixelColor(posicaoAtual - 1, corAmarelo);
-        pixelsJ2.setPixelColor(posicaoAtual + 1, corAmarelo);
-        pixelsJ2.setPixelColor(posicaoAtual - 6, corAmarelo);
-        pixelsJ2.setPixelColor(posicaoAtual + 6, corAmarelo);
-        pixelsJ2.show();
+      // Acendendo os LEDs atrelados ao barco novo
+      pixelsJ2.setPixelColor(posicaoAtual, corVerde);
+      pixelsJ2.setPixelColor(posicaoAtual - 1, corAmarelo);
+      pixelsJ2.setPixelColor(posicaoAtual + 1, corAmarelo);
+      pixelsJ2.setPixelColor(posicaoAtual - 6, corAmarelo);
+      pixelsJ2.setPixelColor(posicaoAtual + 6, corAmarelo);
+      pixelsJ2.show();
 
-      } else if (z == 1) {
-        posicaoVelha = posicaoAtual;
-        // Novas coordenadas
-        coordLinha = detectarCoordLinha(2, true);
-        coordColuna = detectarCoordColuna(2, true);
+    } else if (z == 1) {
+      posicaoVelha = posicaoAtual;
+      // Novas coordenadas
+      coordLinha = detectarCoordLinha(2, true);
+      coordColuna = detectarCoordColuna(2, true);
 
-        // Apagando as casas amarelas antigas
-        pixelsJ2.setPixelColor(posicaoVelha - 1, apagado);
-        pixelsJ2.setPixelColor(posicaoVelha + 1, apagado);
-        pixelsJ2.setPixelColor(posicaoVelha - 6, apagado);
-        pixelsJ2.setPixelColor(posicaoVelha + 6, apagado);
-        pixelsJ2.show();
+      // Apagando as casas amarelas antigas
+      pixelsJ2.setPixelColor(posicaoVelha - 1, apagado);
+      pixelsJ2.setPixelColor(posicaoVelha + 1, apagado);
+      pixelsJ2.setPixelColor(posicaoVelha - 6, apagado);
+      pixelsJ2.setPixelColor(posicaoVelha + 6, apagado);
+      pixelsJ2.show();
 
-        // Endereçando o barco novo
-        barcosJ2[coordLinha][coordColuna] = true;
-        verdeJ2[2] = coordLinha;
-        verdeJ2[3] = coordColuna;
-        posicaoAtual = posicao(coordLinha, coordColuna);
+      // Endereçando o barco novo
+      barcosJ2[coordLinha][coordColuna] = true;
+      verdeJ2[2] = coordLinha;
+      verdeJ2[3] = coordColuna;
+      posicaoAtual = posicao(coordLinha, coordColuna);
 
-        // Acendendo os LEDs atrelados ao barco novo
-        pixelsJ2.setPixelColor(posicaoAtual, corVerde);
-        segundaCasaAcender(posicaoAtual, posicaoVelha, 2);
-        pixelsJ2.show();
-
-
-      } else if (z == 2) {
-        // Novas coordenadas
-        coordLinha = detectarCoordLinha(2, true);
-        coordColuna = detectarCoordColuna(2, true);
-
-        // Apagando as casas amarelas antigas
-        segundaCasaApagar(diferenca, 2);
-
-        //Endereçando o novo barco
-        barcosJ2[coordLinha][coordColuna] = true;
-        verdeJ2[4] = coordLinha;
-        verdeJ2[5] = coordColuna;
-        posicaoAtual = posicao(coordLinha, coordColuna);
-
-        //Acendendo os LEDs atrelados ao barco novo
-        pixelsJ2.setPixelColor(posicaoAtual, corVerde);
-
-      } else if (z == 3) {
-        // Novas coordenadas
-        coordLinha = detectarCoordLinha(2, true);
-        coordColuna = detectarCoordColuna(2, true);
-
-        // Endereçando o barco novo
-        barcosJ2[coordLinha][coordColuna] = true;
-        verdeJ2[6] = coordLinha;
-        verdeJ2[7] = coordColuna;
-        posicaoAtual = posicao(coordLinha, coordColuna);
-
-        // Acendendo os LEDs atrelados ao barco novo
-        pixelsJ2.setPixelColor(posicaoAtual, corVerde);
-        pixelsJ2.setPixelColor(posicaoAtual - 1, corAmarelo);
-        pixelsJ2.setPixelColor(posicaoAtual + 1, corAmarelo);
-        pixelsJ2.setPixelColor(posicaoAtual - 6, corAmarelo);
-        pixelsJ2.setPixelColor(posicaoAtual + 6, corAmarelo);
-        pixelsJ2.show();
-
-      } else if (z == 4) {
-        posicaoVelha = posicaoAtual;
-        // Novas coordenadas
-        coordLinha = detectarCoordLinha(2, true);
-        coordColuna = detectarCoordColuna(2, true);
-
-        // Apagando as casas amarelas antigas
-        pixelsJ2.setPixelColor(posicaoVelha - 1, apagado);
-        pixelsJ2.setPixelColor(posicaoVelha + 1, apagado);
-        pixelsJ2.setPixelColor(posicaoVelha - 6, apagado);
-        pixelsJ2.setPixelColor(posicaoVelha + 6, apagado);
-        pixelsJ2.show();
-
-        // Endereçando o barco novo
-        barcosJ2[coordLinha][coordColuna] = true;
-        verdeJ2[8] = coordLinha;
-        verdeJ2[9] = coordColuna;
-        posicaoAtual = posicao(coordLinha, coordColuna);
-
-        // Acendendo os LEDs atrelados ao barco novo
-        pixelsJ2.setPixelColor(posicaoAtual, corVerde);
-        pixelsJ2.show();
+      // Acendendo os LEDs atrelados ao barco novo
+      pixelsJ2.setPixelColor(posicaoAtual, corVerde);
+      segundaCasaAcender(posicaoAtual, posicaoVelha, 2);
+      pixelsJ2.show();
 
 
-      } else if (z == 5) {
-        // Novas coordenadas
-        coordLinha = detectarCoordLinha(2, true);
-        coordColuna = detectarCoordColuna(2, true);
+    } else if (z == 2) {
+      // Novas coordenadas
+      coordLinha = detectarCoordLinha(2, true);
+      coordColuna = detectarCoordColuna(2, true);
 
-        //Endereçando o novo barco
-        barcosJ2[coordLinha][coordColuna] = true;
-        verdeJ2[10] = coordLinha;
-        verdeJ2[11] = coordColuna;
-        posicaoAtual = posicao(coordLinha, coordColuna);
+      // Apagando as casas amarelas antigas
+      segundaCasaApagar(diferenca, 2);
 
-        //Acendendo os LEDs atrelados ao barco novo
-        pixelsJ2.setPixelColor(posicaoAtual, corVerde);
-        pixelsJ2.show();
-        delay(2000);
-      }
+      //Endereçando o novo barco
+      barcosJ2[coordLinha][coordColuna] = true;
+      verdeJ2[4] = coordLinha;
+      verdeJ2[5] = coordColuna;
+      posicaoAtual = posicao(coordLinha, coordColuna);
+
+      //Acendendo os LEDs atrelados ao barco novo
+      pixelsJ2.setPixelColor(posicaoAtual, corVerde);
+
+    } else if (z == 3) {
+      // Novas coordenadas
+      coordLinha = detectarCoordLinha(2, true);
+      coordColuna = detectarCoordColuna(2, true);
+
+      // Endereçando o barco novo
+      barcosJ2[coordLinha][coordColuna] = true;
+      verdeJ2[6] = coordLinha;
+      verdeJ2[7] = coordColuna;
+      posicaoAtual = posicao(coordLinha, coordColuna);
+
+      // Acendendo os LEDs atrelados ao barco novo
+      pixelsJ2.setPixelColor(posicaoAtual, corVerde);
+      pixelsJ2.setPixelColor(posicaoAtual - 1, corAmarelo);
+      pixelsJ2.setPixelColor(posicaoAtual + 1, corAmarelo);
+      pixelsJ2.setPixelColor(posicaoAtual - 6, corAmarelo);
+      pixelsJ2.setPixelColor(posicaoAtual + 6, corAmarelo);
+      pixelsJ2.show();
+
+    } else if (z == 4) {
+      posicaoVelha = posicaoAtual;
+      // Novas coordenadas
+      coordLinha = detectarCoordLinha(2, true);
+      coordColuna = detectarCoordColuna(2, true);
+
+      // Apagando as casas amarelas antigas
+      pixelsJ2.setPixelColor(posicaoVelha - 1, apagado);
+      pixelsJ2.setPixelColor(posicaoVelha + 1, apagado);
+      pixelsJ2.setPixelColor(posicaoVelha - 6, apagado);
+      pixelsJ2.setPixelColor(posicaoVelha + 6, apagado);
+      pixelsJ2.show();
+
+      // Endereçando o barco novo
+      barcosJ2[coordLinha][coordColuna] = true;
+      verdeJ2[8] = coordLinha;
+      verdeJ2[9] = coordColuna;
+      posicaoAtual = posicao(coordLinha, coordColuna);
+
+      // Acendendo os LEDs atrelados ao barco novo
+      pixelsJ2.setPixelColor(posicaoAtual, corVerde);
+      pixelsJ2.show();
+
+
+    } else if (z == 5) {
+      // Novas coordenadas
+      coordLinha = detectarCoordLinha(2, true);
+      coordColuna = detectarCoordColuna(2, true);
+
+      //Endereçando o novo barco
+      barcosJ2[coordLinha][coordColuna] = true;
+      verdeJ2[10] = coordLinha;
+      verdeJ2[11] = coordColuna;
+      posicaoAtual = posicao(coordLinha, coordColuna);
+
+      //Acendendo os LEDs atrelados ao barco novo
+      pixelsJ2.setPixelColor(posicaoAtual, corVerde);
+      pixelsJ2.show();
     }
   }
 
+  delay(2000);
+  pixelsJ1.fill(apagado);
+  pixelsJ2.fill(apagado);
+
   // Fase de palpites
   while (barcosRestantesJ1 != 0 && barcosRestantesJ2 != 0) {
-    // Apagando os LEDs da ultima fase do jogador 2
+    // Tabuleiro de defesa jogador 2
+    coresAcender(2, false)
+    // Apagando os LEDs da ultima fase do jogador 1
     pixelsJ1.fill(apagado);
-    pixelJ1.show();
+    pixelsJ1.show();
 
     // Jogador 1 seleciona sua casa
     coordLinha = detectarCoordLinha(1, false);
     coordColuna = detectarCoordColuna(1, false);
+    posicaoAtual = posicao(coordLinha, coordColuna);
 
-    while (barcosJ2[coordLinha][coordcoluna] == true) {
+    while (barcosJ2[coordLinha][coordColuna] == true) {
+      coresAcender(1, true);
       if (barcosRestantesJ2 == 0) {
+        coresAcender(1, true);
         break;
       }
       barcosRestantesJ2--;
-      contAcertosJ1++;
-      laranjaJ1 = coordLinha; // ???
-      laranjaJ1 = coordColuna; // ???
+      appendCoordenadas(coordLinha, coordColuna, laranjaJ2, &contAcertosJ1, 12);
       barcosJ2[coordLinha][coordColuna] = false;
       coordLinha = detectarCoordLinha(1, false);
       coordColuna = detectarCoordColuna(1, false);
+      posicaoAtual = posicao(coordLinha, coordColuna);
     }
 
-    azulClaro = coordLinha; // ???
-    azulClaro = coordColuna; // ???
-    contErrosJ1++;
-    // Voltar a mostrar o tabuleiro de barcos do jogador 1
+    appendCoordenadas(coordLinha, coordColuna, azulClaro, &contErrosJ1, 60);
+    coresAcender(1, true);
+    delay(2000);
+    pixelsJ1.fill(apagado);
+    delay(1000);
+    // Tabuleiro de defesa jogador 1
+    coresAcender(1, false)
 
     // Apagando os LEDs da ultima fase do jogador 2
     pixelsJ2.fill(apagado);
-    pixelJ2.show();
+    pixelsJ2.show();
 
     // Jogador 2 seleciona sua casa
     coordLinha = detectarCoordLinha(2, false);
     coordColuna = detectarCoordColuna(2, false);
 
-    while (barcosJ1[coordLinha][coordcoluna] == true) {
+    while (barcosJ1[coordLinha][coordColuna] == true) {
+      coresAcender(1, true)
       if (barcosRestantesJ1 == 0) {
+        coresAcender(1, true)
         break;
       }
-      barcosRestantesJ1--;
-      contAcertosJ2++;
-      laranjaJ2 = coordLinha; // ???
-      laranjaJ2 = coordColuna; // ???
+      barcosRestantesJ2--;
+      appendCoordenadas(coordLinha, coordColuna, laranjaJ1, &contAcertosJ2, 12);
       barcosJ1[coordLinha][coordColuna] = false;
       coordLinha = detectarCoordLinha(2, false);
       coordColuna = detectarCoordColuna(2, false);
     }
 
-    azulEscuro = coordLinha; // ???
-    azulEscuro = coordColuna; // ???
-    contErrosJ2++;
-    // Voltar a mostrar o tabuleiro do jogador 2
-
+    appendCoordenadas(coordLinha, coordColuna, azulEscuro, &contErrosJ2, 60);
+    coresAcender(2, true);
+    delay(2000);
+    pixelsJ2.fill(apagado);
+    delay(1000);
   }
+
+  pixelsJ1.fill(apagado);
+  pixelsJ2.fill(apagado);
 }
