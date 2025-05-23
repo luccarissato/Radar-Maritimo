@@ -39,5 +39,7 @@
 Veja a lista de [colaboradores](https://github.com/luccarissato/Radar-Maritimo/graphs/contributors).
 
 ## Artigos relacionados
-
+[Logica](https://www.canva.com/design/DAGmTMpjgZU/M6ENvyQbRjVcPlpwgezG6w/edit)
+[LEDs](https://docs.google.com/document/d/1Sy9DZSqPzpIKdoNRvKYAcvU3oX75fMmVJiSy4DJXtCE/edit?tab=t.0)
+[Rascunho Da Logica](https://docs.google.com/document/d/1cCqNBBMvbgPbsKnjYv-kbeMVeqmdhjC4WygrdKPP7Q8/edit?tab=t.0)
 
