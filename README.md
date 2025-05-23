@@ -33,7 +33,7 @@
 
 |                 **Igor Gabriel**                  |                    **Lucca Rissato**                    |                   **Daniel dos Santos**                   |          
 | :------------------------------------------------: | :------------------------------------------------------: | :--------------------------------------------------: | 
-| ![Igor](https://avatars.githubusercontent.com/u/107767224?v=4) | ![Lucca]() | ![Daniel](https://avatars.githubusercontent.com/u/210912757?v=4) | 
+| ![Igor](https://avatars.githubusercontent.com/u/107767224?v=4) | ![Lucca](https://avatars.githubusercontent.com/luccarissato) | ![Daniel](https://avatars.githubusercontent.com/u/210912757?v=4) | 
 |           **Displays e Logica De Jogo**           |              **Leds e Logica De Jogo**               |     **Sonoplastia**      |             
 
 Veja a lista de [colaboradores](https://github.com/luccarissato/Radar-Maritimo/graphs/contributors).
