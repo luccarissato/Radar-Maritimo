@@ -1,6 +1,6 @@
 # Radar-Maritmo
 
-<img src="imagem.png" alt="Exemplo imagem">
+![Texto Alternativo](https://github.com/user-attachments/assets/aaa78436-055c-4b55-be8c-6c2bfae3a786)
 
 > Imagine o Batalha Naval, porem basicamente automatizado e facilitado para todas as pessoas que o podem jogar, com a utilizacao de botoes e LEDs a automatizacao deste classico ocorre!
 
