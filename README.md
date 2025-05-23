@@ -1,4 +1,4 @@
-![image]()# Radar-Maritmo
+# Radar-Maritmo
 
 <img src="imagem.png" alt="Exemplo imagem">
 
@@ -33,7 +33,7 @@
 
 |                 **Igor Gabriel**                  |                    **Lucca Rissato**                    |                   **Daniel dos Santos**                   |          
 | :------------------------------------------------: | :------------------------------------------------------: | :--------------------------------------------------: | 
-| ![Igor](https://avatars.githubusercontent.com/u/107767224?v=4) | ![Lucca](https://github.com/ThiagoAugustoSM.png?size=140) | ![Daniel](https://avatars.githubusercontent.com/u/210912757?v=4) | 
+| ![Igor](https://avatars.githubusercontent.com/u/107767224?v=4) | ![Lucca](https://lh7-rt.googleusercontent.com/sitesz/AClOY7oRK-09PQfpJDTg7kAxhzPtWxxM0V1sU5YOSE3rY0P4q74FnIZ6sYL682w3RADGzIjn8oMnIo-exoB1HR3n-OaIawHKXA_MW6iOWl-2kNorUZvFFMKclQqI0f-5gKSPP-h8EhjTquOT_EAP0yPleR_dRxPk5oSew_l-6EnpSh5E-go7a4bd?key=MAU-bJG7rOiyyCiWZkSkAw) | ![Daniel](https://avatars.githubusercontent.com/u/210912757?v=4) | 
 |           **Displays e Logica De Jogo**           |              **Leds e Logica De Jogo**               |     **Sonoplastia**      |             
 
 Veja a lista de [colaboradores](https://github.com/luccarissato/Radar-Maritimo/graphs/contributors).
