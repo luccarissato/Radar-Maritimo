@@ -34,7 +34,7 @@
 |                 **Igor Gabriel**                  |                    **Lucca Rissato**                    |                   **Daniel dos Santos**                   |          
 | :------------------------------------------------: | :------------------------------------------------------: | :--------------------------------------------------: | 
 | ![Igor](https://github.com/OtacilioN.png?size=140) | ![Lucca](https://github.com/ThiagoAugustoSM.png?size=140) | ![Daniel](https://avatars.githubusercontent.com/u/210912757?v=4) | 
-|           **Displays e parte da logica**           |              **Leds e logica do jogo**               |     **Sonoplastia**      |             
+|           **Displays e Logica De Jogo**           |              **Leds e Logica De Jogo**               |     **Sonoplastia**      |             
 
 Veja a lista de [colaboradores](https://github.com/luccarissato/Radar-Maritimo/graphs/contributors).
 
