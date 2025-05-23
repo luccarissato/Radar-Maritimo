@@ -100,32 +100,32 @@ void setup() {
   pixelsJ2.begin();
 
   // Iniciado os botões do jogador 1
-  pinMode(BL1J1, INPUT);
-  pinMode(BL2J1, INPUT);
-  pinMode(BL3J1, INPUT);
-  pinMode(BL4J1, INPUT);
-  pinMode(BL5J1, INPUT);
-  pinMode(BL6J1, INPUT);
-  pinMode(BC1J1, INPUT);
-  pinMode(BC2J1, INPUT);
-  pinMode(BC3J1, INPUT);
-  pinMode(BC4J1, INPUT);
-  pinMode(BC5J1, INPUT);
-  pinMode(BC6J1, INPUT);
+  pinMode(BL1J1, INPUT_PULLUP);
+  pinMode(BL2J1, INPUT_PULLUP);
+  pinMode(BL3J1, INPUT_PULLUP);
+  pinMode(BL4J1, INPUT_PULLUP);
+  pinMode(BL5J1, INPUT_PULLUP);
+  pinMode(BL6J1, INPUT_PULLUP);
+  pinMode(BC1J1, INPUT_PULLUP);
+  pinMode(BC2J1, INPUT_PULLUP);
+  pinMode(BC3J1, INPUT_PULLUP);
+  pinMode(BC4J1, INPUT_PULLUP);
+  pinMode(BC5J1, INPUT_PULLUP);
+  pinMode(BC6J1, INPUT_PULLUP);
 
   // Iniciando os botões do jogador 2
-  pinMode(BL1J2, INPUT);
-  pinMode(BL2J2, INPUT);
-  pinMode(BL3J2, INPUT);
-  pinMode(BL4J2, INPUT);
-  pinMode(BL5J2, INPUT);
-  pinMode(BL6J2, INPUT);
-  pinMode(BC1J2, INPUT);
-  pinMode(BC2J2, INPUT);
-  pinMode(BC3J2, INPUT);
-  pinMode(BC4J2, INPUT);
-  pinMode(BC5J2, INPUT);
-  pinMode(BC6J2, INPUT);
+  pinMode(BL1J2, INPUT_PULLUP);
+  pinMode(BL2J2, INPUT_PULLUP);
+  pinMode(BL3J2, INPUT_PULLUP);
+  pinMode(BL4J2, INPUT_PULLUP);
+  pinMode(BL5J2, INPUT_PULLUP);
+  pinMode(BL6J2, INPUT_PULLUP);
+  pinMode(BC1J2, INPUT_PULLUP);
+  pinMode(BC2J2, INPUT_PULLUP);
+  pinMode(BC3J2, INPUT_PULLUP);
+  pinMode(BC4J2, INPUT_PULLUP);
+  pinMode(BC5J2, INPUT_PULLUP);
+  pinMode(BC6J2, INPUT_PULLUP);
 }
 
 // Apaga todos os LEDs do objeto recebido
@@ -155,17 +155,20 @@ int detectarCoordLinha(int jogador, bool piscar) {
   int inicio, fim;
   uint32_t corPiscar;
   Adafruit_NeoPixel* pixels;
+  bool (*barcos)[6]; // Ponteiro para a matriz do jogador
 
   if (jogador == 1) {
     inicio = 3;
     fim = 9;
-    corPiscar = azulClaro;
+    corPiscar = corAzulClaro;
     pixels = &pixelsJ1;
+    barcos = barcosJ1;
   } else if (jogador == 2) {
     inicio = 15;
     fim = 21;
-    corPiscar = azulEscuro;
+    corPiscar = corAzulEscuro;
     pixels = &pixelsJ2;
+    barcos = barcosJ2;
   } else {
     return -1;  // jogador inválido
   }
@@ -174,46 +177,46 @@ int detectarCoordLinha(int jogador, bool piscar) {
     // Verifica se algum botão foi pressionado
     for (int c = inicio; c < fim; c++) {
       int buttonState = digitalRead(c);
-      if (buttonState == HIGH) {
+      if (buttonState == LOW) {
         return c - inicio;
       }
     }
 
     // Pisca as linhas se solicitado
     if (piscar) {
-      for (int c = 0; c < 36; c += 6) {
-        pixels->setPixelColor(0 + c, corPiscar);
-        pixels->setPixelColor(1 + c, corPiscar);
-        pixels->setPixelColor(2 + c, corPiscar);
-        pixels->setPixelColor(3 + c, corPiscar);
-        pixels->setPixelColor(4 + c, corPiscar);
-        pixels->setPixelColor(5 + c, corPiscar);
-      }
-      pixels->show();
-      delay(500);
+      for (int linha = 0; linha < 6; linha++) {
+        // Acende a linha atual, apenas nas casas sem barco
+        for (int coluna = 0; coluna < 6; coluna++) {
+          if (!barcos[linha][coluna]) {
+            int pixelIndex = linha * 6 + coluna;
+            pixels->setPixelColor(pixelIndex, corPiscar);
+          }
+        }
+        pixels->show();
+        delay(500);
 
-      for (int c = 0; c < 36; c += 6) {
-        pixels->setPixelColor(0 + c, apagado);
-        pixels->setPixelColor(1 + c, apagado);
-        pixels->setPixelColor(2 + c, apagado);
-        pixels->setPixelColor(3 + c, apagado);
-        pixels->setPixelColor(4 + c, apagado);
-        pixels->setPixelColor(5 + c, apagado);
+        // Apaga a linha atual
+        for (int coluna = 0; coluna < 6; coluna++) {
+          if (!barcos[linha][coluna]) {
+            int pixelIndex = linha * 6 + coluna;
+            pixels->setPixelColor(pixelIndex, 0); // apagado
+          }
+        }
+        pixels->show();
+        delay(500);
       }
-      pixels->show();
-      delay(500);
     } else {
-      delay(10);  // Delay pequeno para evitar loop rápido demais
+      delay(10);
     }
   }
 }
-
 
 // Detecta qual botão das colunas está sendo pressionado, detectará as entradas do jogador cujo numero for atribuído a função, além de acender o LED no padrão auxiliador
 int detectarCoordColuna(int jogador, bool piscar) {
   int inicio, fim;
   uint32_t corPiscar;
   Adafruit_NeoPixel* pixels;
+  bool (*barcos)[6]; // Ponteiro para a matriz do jogador
 
   // Define os pinos e LEDs com base no jogador
   if (jogador == 1) {
@@ -221,11 +224,13 @@ int detectarCoordColuna(int jogador, bool piscar) {
     fim = 15;  // pinos 9 a 14
     corPiscar = azulClaro;
     pixels = &pixelsJ1;
+    barcos = barcosJ1;
   } else if (jogador == 2) {
     inicio = 21;
     fim = 27;  // pinos 21 a 26
     corPiscar = azulEscuro;
     pixels = &pixelsJ2;
+    barcos = barcosJ2;
   } else {
     return -1;  // jogador inválido
   }
@@ -234,34 +239,34 @@ int detectarCoordColuna(int jogador, bool piscar) {
     // Verifica se algum botão foi pressionado
     for (int c = inicio; c < fim; c++) {
       int buttonState = digitalRead(c);
-      if (buttonState == HIGH) {
+      if (buttonState == LOW) {
         return c - inicio;
       }
     }
 
     // Pisca as colunas se solicitado
     if (piscar) {
-      for (int c = 0; c < 5; c++) {  // 5 colunas (índices 0 a 4)
-        pixels->setPixelColor(0 + c, corPiscar);
-        pixels->setPixelColor(6 + c, corPiscar);
-        pixels->setPixelColor(12 + c, corPiscar);
-        pixels->setPixelColor(18 + c, corPiscar);
-        pixels->setPixelColor(24 + c, corPiscar);
-        pixels->setPixelColor(30 + c, corPiscar);
-      }
-      pixels->show();
-      delay(500);
+      for (int coluna = 0; coluna < 6; coluna++) {
+        // Acende todos os pixels da coluna atual, se não tiver barco
+        for (int linha = 0; linha < 6; linha++) {
+          if (!barcos[linha][coluna]) {
+            int pixelIndex = linha * 6 + coluna;
+            pixels->setPixelColor(pixelIndex, corPiscar);
+          }
+        }
+        pixels->show();
+        delay(500);
 
-      for (int c = 0; c < 5; c++) {
-        pixels->setPixelColor(0 + c, apagado);
-        pixels->setPixelColor(6 + c, apagado);
-        pixels->setPixelColor(12 + c, apagado);
-        pixels->setPixelColor(18 + c, apagado);
-        pixels->setPixelColor(24 + c, apagado);
-        pixels->setPixelColor(30 + c, apagado);
+        // Apaga os pixels da coluna atual
+        for (int linha = 0; linha < 6; linha++) {
+          if (!barcos[linha][coluna]) {
+            int pixelIndex = linha * 6 + coluna;
+            pixels->setPixelColor(pixelIndex, 0);
+          }
+        }
+        pixels->show();
+        delay(500);
       }
-      pixels->show();
-      delay(500);
     } else {
       delay(10);  // Pequeno delay para evitar loop excessivo
     }
@@ -415,7 +420,7 @@ void loop() {
     clearPixels(pixelsJ1);
     delay(100);
   }
-  for (int i = 4; i >= 0; i--) {
+  for (int i = 5; i >= 0; i--) {
     lightDiagonal(pixelsJ1, i, corLaranja);
     clearPixels(pixelsJ1);
     delay(100);
@@ -427,7 +432,7 @@ void loop() {
     clearPixels(pixelsJ2);
     delay(100);
   }
-  for (int i = 4; i >= 0; i--) {
+  for (int i = 5; i >= 0; i--) {
     lightDiagonal(pixelsJ2, i, corLaranja);
     clearPixels(pixelsJ2);
     delay(100);
@@ -688,7 +693,7 @@ void loop() {
   // Fase de palpites
   while (barcosRestantesJ1 != 0 && barcosRestantesJ2 != 0) {
     // Tabuleiro de defesa jogador 2
-    coresAcender(2, false)
+    coresAcender(2, false);
     // Apagando os LEDs da ultima fase do jogador 1
     pixelsJ1.fill(apagado);
     pixelsJ1.show();
@@ -718,7 +723,7 @@ void loop() {
     pixelsJ1.fill(apagado);
     delay(1000);
     // Tabuleiro de defesa jogador 1
-    coresAcender(1, false)
+    coresAcender(1, false);
 
     // Apagando os LEDs da ultima fase do jogador 2
     pixelsJ2.fill(apagado);
@@ -729,9 +734,9 @@ void loop() {
     coordColuna = detectarCoordColuna(2, false);
 
     while (barcosJ1[coordLinha][coordColuna] == true) {
-      coresAcender(1, true)
+      coresAcender(1, true);
       if (barcosRestantesJ1 == 0) {
-        coresAcender(1, true)
+        coresAcender(1, true);
         break;
       }
       barcosRestantesJ2--;
