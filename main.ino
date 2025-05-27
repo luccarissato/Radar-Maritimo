@@ -1,9 +1,9 @@
 #include <Adafruit_NeoPixel.h>
 
 // Pin do led do jogador 1
-#define LEDPINJ1 1
+#define LEDPINJ1 A1
 // Pin do led do jogador 2
-#define LEDPINJ2 2
+#define LEDPINJ2 A2
 
 #define NUMPIXELS 36
 
