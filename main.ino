@@ -52,12 +52,12 @@ int laranjaJ2[12];
 
 // Matriz de tradução das coordenadas para o LED específico
 int matrizLeds[6][6] = {
-  { 0, 1, 2, 3, 4, 5 },
-  { 6, 7, 8, 9, 10, 11 },
-  { 12, 13, 14, 15, 16, 17 },
-  { 18, 19, 20, 21, 22, 23 },
-  { 24, 25, 26, 27, 28, 29 },
-  { 30, 31, 32, 33, 34, 35 }
+  { 0, 6, 12, 18, 24, 30 },
+  { 1, 7, 13, 19, 25, 31 },
+  { 2, 8, 14, 20, 26, 32 },
+  { 3, 9, 15, 21, 27, 33 },
+  { 4, 10, 16, 22, 28, 34 },
+  { 5, 11, 17, 23, 29, 35 }
 };
 
 // Posição dos barcos do jogador 1
@@ -170,36 +170,37 @@ int detectarCoordLinha(int jogador, bool piscar) {
     pixels = &pixelsJ2;
     barcos = barcosJ2;
   } else {
-    return -1;  // jogador inválido
+    return -1;
   }
 
   while (true) {
-    // Verifica se algum botão foi pressionado
+    // Verifica se algum botão foi pressionado com debounce
     for (int c = inicio; c < fim; c++) {
-      int buttonState = digitalRead(c);
-      if (buttonState == LOW) {
-        return c - inicio;
+      if (digitalRead(c) == LOW) {
+        delay(20); // debounce simples
+        if (digitalRead(c) == LOW) {
+          while (digitalRead(c) == LOW); // espera soltar
+          return c - inicio;
+        }
       }
     }
 
     // Pisca as linhas se solicitado
     if (piscar) {
       for (int linha = 0; linha < 6; linha++) {
-        // Acende a linha atual, apenas nas casas sem barco
         for (int coluna = 0; coluna < 6; coluna++) {
           if (!barcos[linha][coluna]) {
-            int pixelIndex = linha * 6 + coluna;
+            int pixelIndex = posicao(linha, coluna);
             pixels->setPixelColor(pixelIndex, corPiscar);
           }
         }
         pixels->show();
         delay(500);
 
-        // Apaga a linha atual
         for (int coluna = 0; coluna < 6; coluna++) {
           if (!barcos[linha][coluna]) {
-            int pixelIndex = linha * 6 + coluna;
-            pixels->setPixelColor(pixelIndex, 0); // apagado
+            int pixelIndex = posicao(linha, coluna);
+            pixels->setPixelColor(pixelIndex, 0);
           }
         }
         pixels->show();
@@ -211,6 +212,7 @@ int detectarCoordLinha(int jogador, bool piscar) {
   }
 }
 
+
 // Detecta qual botão das colunas está sendo pressionado, detectará as entradas do jogador cujo numero for atribuído a função, além de acender o LED no padrão auxiliador
 int detectarCoordColuna(int jogador, bool piscar) {
   int inicio, fim;
@@ -218,49 +220,49 @@ int detectarCoordColuna(int jogador, bool piscar) {
   Adafruit_NeoPixel* pixels;
   bool (*barcos)[6]; // Ponteiro para a matriz do jogador
 
-  // Define os pinos e LEDs com base no jogador
   if (jogador == 1) {
     inicio = 9;
-    fim = 15;  // pinos 9 a 14
-    corPiscar = azulClaro;
+    fim = 15;
+    corPiscar = corAzulClaro;
     pixels = &pixelsJ1;
     barcos = barcosJ1;
   } else if (jogador == 2) {
     inicio = 21;
-    fim = 27;  // pinos 21 a 26
-    corPiscar = azulEscuro;
+    fim = 27;
+    corPiscar = corAzulEscuro;
     pixels = &pixelsJ2;
     barcos = barcosJ2;
   } else {
-    return -1;  // jogador inválido
+    return -1;
   }
 
   while (true) {
-    // Verifica se algum botão foi pressionado
+    // Verifica se algum botão foi pressionado com debounce
     for (int c = inicio; c < fim; c++) {
-      int buttonState = digitalRead(c);
-      if (buttonState == LOW) {
-        return c - inicio;
+      if (digitalRead(c) == LOW) {
+        delay(20); // debounce simples
+        if (digitalRead(c) == LOW) {
+          while (digitalRead(c) == LOW); // espera soltar
+          return c - inicio;
+        }
       }
     }
 
     // Pisca as colunas se solicitado
     if (piscar) {
       for (int coluna = 0; coluna < 6; coluna++) {
-        // Acende todos os pixels da coluna atual, se não tiver barco
         for (int linha = 0; linha < 6; linha++) {
           if (!barcos[linha][coluna]) {
-            int pixelIndex = linha * 6 + coluna;
+            int pixelIndex = posicao(linha, coluna);
             pixels->setPixelColor(pixelIndex, corPiscar);
           }
         }
         pixels->show();
         delay(500);
 
-        // Apaga os pixels da coluna atual
         for (int linha = 0; linha < 6; linha++) {
           if (!barcos[linha][coluna]) {
-            int pixelIndex = linha * 6 + coluna;
+            int pixelIndex = posicao(linha, coluna);
             pixels->setPixelColor(pixelIndex, 0);
           }
         }
@@ -268,7 +270,7 @@ int detectarCoordColuna(int jogador, bool piscar) {
         delay(500);
       }
     } else {
-      delay(10);  // Pequeno delay para evitar loop excessivo
+      delay(10);
     }
   }
 }
@@ -289,22 +291,23 @@ void segundaCasaAcender(int atual, int velha, int jogador) {
   }
 
   // Acende LEDs nas posições adjacentes com base na diferença
-  if (diferenca == 1) {
-    pixels->setPixelColor(atual + 1, corAmarelo);
-    pixels->setPixelColor(atual - 2, corAmarelo);
-
-  } else if (diferenca == -1) {
-    pixels->setPixelColor(atual - 1, corAmarelo);
-    pixels->setPixelColor(atual + 2, corAmarelo);
+  if (diferenca == 6) {
+    pixels->setPixelColor(atual + 6, corAmarelo);
+    pixels->setPixelColor(atual - 12, corAmarelo);
 
   } else if (diferenca == -6) {
     pixels->setPixelColor(atual - 6, corAmarelo);
     pixels->setPixelColor(atual + 12, corAmarelo);
 
-  } else if (diferenca == 6) {
-    pixels->setPixelColor(atual - 12, corAmarelo);
-    pixels->setPixelColor(atual + 6, corAmarelo);
+  } else if (diferenca == -1) {
+    pixels->setPixelColor(atual - 1, corAmarelo);
+    pixels->setPixelColor(atual + 2, corAmarelo);
+
+  } else if (diferenca == 1) {
+    pixels->setPixelColor(atual - 2, corAmarelo);
+    pixels->setPixelColor(atual + 1, corAmarelo);
   }
+  pixels->show();
 }
 
 // Apagar a função segundaCasaAcender
@@ -321,22 +324,24 @@ void segundaCasaApagar(int diferenca, int jogador) {
   }
 
   // Apaga os LEDs nas posições correspondentes
-  if (diferenca == 1) {
-    pixels->setPixelColor(apagar + 1, apagado);
-    pixels->setPixelColor(apagar - 2, apagado);
-
-  } else if (diferenca == -1) {
-    pixels->setPixelColor(apagar - 1, apagado);
-    pixels->setPixelColor(apagar + 2, apagado);
+  if (diferenca == 6) {
+    pixels->setPixelColor(apagar + 6, apagado);
+    pixels->setPixelColor(apagar - 12, apagado);
 
   } else if (diferenca == -6) {
     pixels->setPixelColor(apagar - 6, apagado);
     pixels->setPixelColor(apagar + 12, apagado);
 
-  } else if (diferenca == 6) {
-    pixels->setPixelColor(apagar - 12, apagado);
-    pixels->setPixelColor(apagar + 6, apagado);
+  } else if (diferenca == -1) {
+    pixels->setPixelColor(apagar - 1, apagado);
+    pixels->setPixelColor(apagar + 2, apagado);
+
+  } else if (diferenca == 1) {
+    pixels->setPixelColor(apagar - 2, apagado);
+    pixels->setPixelColor(apagar + 1, apagado);
   }
+
+  pixels->show();
 }
 
 // Adiciona valores às listas
@@ -418,24 +423,24 @@ void loop() {
   for (int i = 0; i < 6; i++) {
     lightDiagonal(pixelsJ1, i, corAzulEscuro);
     clearPixels(pixelsJ1);
-    delay(100);
+    delay(300);
   }
   for (int i = 5; i >= 0; i--) {
     lightDiagonal(pixelsJ1, i, corLaranja);
     clearPixels(pixelsJ1);
-    delay(100);
+    delay(300);
   }
 
   // Animação diagonal para J2
   for (int i = 0; i < 6; i++) {
     lightDiagonal(pixelsJ2, i, corAzulClaro);
     clearPixels(pixelsJ2);
-    delay(100);
+    delay(300);
   }
   for (int i = 5; i >= 0; i--) {
     lightDiagonal(pixelsJ2, i, corLaranja);
     clearPixels(pixelsJ2);
-    delay(100);
+    delay(300);
   }
 
   delay(1000);
@@ -689,6 +694,8 @@ void loop() {
   delay(2000);
   pixelsJ1.fill(apagado);
   pixelsJ2.fill(apagado);
+  pixelsJ1.show();
+  pixelsJ2.show();
 
   // Fase de palpites
   while (barcosRestantesJ1 != 0 && barcosRestantesJ2 != 0) {
@@ -755,4 +762,6 @@ void loop() {
 
   pixelsJ1.fill(apagado);
   pixelsJ2.fill(apagado);
+  pixelsJ2.show();
+  pixelsJ1.show();
 }
