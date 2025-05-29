@@ -1,0 +1,135 @@
+const int buzzer = 7;
+int tempo = 120;
+
+
+// ========== INÍCIO DE JOGO ==========
+int melody_inicio[] = {
+  262, 16,
+  330, 16,
+  392, 16,
+  523, 8,
+  659, 8
+};
+int notes_inicio = sizeof(melody_inicio) / sizeof(melody_inicio[0]) / 2;
+int wholenote_inicio = (60000 * 4) / tempo;
+void inicio_jogo_som() {
+  int divider, noteDuration;
+
+  for (int i = 0; i < notes_inicio * 2; i += 2) {
+    divider = melody_inicio[i + 1];
+    noteDuration = (wholenote_inicio) / abs(divider);
+    tone(buzzer, melody_inicio[i], noteDuration * 0.9);
+    delay(noteDuration + 40);
+    noTone(buzzer);
+  }
+}
+// ========== ACERTOU ÁGUA ==========
+int melody_agua[] = {
+  262, 16,
+  349, 32,
+  330, 16
+};
+int notes_agua = sizeof(melody_agua) / sizeof(melody_agua[0]) / 2;
+int wholenote_agua = (60000 * 4) / tempo;
+void acertou_agua_som() {
+  for (int freq = 2500; freq >= 400; freq -= 30) {
+    tone(buzzer, freq, 25);
+    delay(30);
+  }
+  delay(500);
+  for (int i = 0; i < notes_agua * 2; i += 2) {
+    int divider = melody_agua[i + 1];
+    int noteDuration = (wholenote_agua / abs(divider));
+    tone(buzzer, melody_agua[i], noteDuration * 0.9);
+    delay(noteDuration);
+    noTone(buzzer);
+  }
+  noTone(buzzer);
+}
+// ========== ACERTOU BARCO ==========
+void acertou_barco_som() {
+  for (int freq = 2500; freq >= 400; freq -= 30) {
+    tone(buzzer, freq, 25);
+    delay(30);
+  }
+  delay(500);
+
+  for (int freq = 400; freq <= 800; freq += 80) {
+    tone(buzzer, freq, 40);
+    delay(40);
+  }
+
+  tone(buzzer, 70, 700);
+  delay(700);
+
+  int ecoFreqs[] = {90, 60, 45, 30};
+  int ecoDur[] = {300, 250, 200, 150};
+
+  for (int i = 0; i < 4; i++) {
+    tone(buzzer, ecoFreqs[i], ecoDur[i]);
+    delay(ecoDur[i]);
+  }
+  noTone(buzzer);
+}
+// ========== CASA ERRADA ==========
+int melody_erro[] = {
+  330, 16,
+  294, 16,
+  277, 16,
+  262, 8
+};
+int notes_erro = sizeof(melody_erro) / sizeof(melody_erro[0]) / 2;
+int wholenote_erro = (60000 * 4) / 100;
+void casa_errada_som() {
+  int divider, noteDuration;
+  for (int i = 0; i < notes_erro * 2; i += 2) {
+    divider = melody_erro[i + 1];
+    noteDuration = (wholenote_erro / abs(divider));
+    tone(buzzer, melody_erro[i], noteDuration * 0.9);
+    delay(noteDuration);
+    noTone(buzzer);
+  }
+  tone(buzzer, 740, 200);
+  delay(200);
+  noTone(buzzer);
+}
+// ========== FIM DE RODADA ==========
+int melody_fim[] = {
+  659, 16,
+  523, 16,
+  392, 8
+};
+int notes_fim = sizeof(melody_fim) / sizeof(melody_fim[0]) / 2;
+int wholenote_fim = (60000 * 4) / 100;
+void fim_rodada_som() {
+  int divider, noteDuration;
+  for (int i = 0; i < notes_fim * 2; i += 2) {
+    divider = melody_fim[i + 1];
+    noteDuration = (wholenote_fim / abs(divider));
+    tone(buzzer, melody_fim[i], noteDuration * 0.9);
+    delay(noteDuration + 40);
+    noTone(buzzer);
+  }
+}
+// ========== FIM DE JOGO ==========
+void fim_de_jogo_som() {
+  tone(buzzer, 500, 150);
+  delay(170);
+  tone(buzzer, 600, 150);
+  delay(170);
+  tone(buzzer, 750, 200);
+  delay(220);
+  tone(buzzer, 900, 400);
+  delay(420);
+  noTone(buzzer);
+}
+
+
+
+
+void setup() {
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+}
