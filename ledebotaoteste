@@ -1,0 +1,55 @@
+#include <Adafruit_NeoPixel.h>
+
+// ----- Configuração dos botões -----
+const int firstPin = 2;  // Começa do pino 2, evitando conflito com RX/TX
+const int lastPin = 60;
+const int ledPin1 = 24;  // Pino da fita 1
+const int ledPin2 = 22;  // Pino da fita 2
+
+// ----- Configuração dos LEDs -----
+#define NUM_LEDS 36
+Adafruit_NeoPixel fita1(NUM_LEDS, ledPin1, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel fita2(NUM_LEDS, ledPin2, NEO_GRB + NEO_KHZ800);
+
+// ----- Função para ligar os LEDs -----
+void ligaTodasAsFitas(uint8_t r, uint8_t g, uint8_t b) {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    fita1.setPixelColor(i, fita1.Color(r, g, b));
+    fita2.setPixelColor(i, fita2.Color(r, g, b));
+  }
+  fita1.show();
+  fita2.show();
+}
+
+void setup() {
+  Serial.begin(9600);
+
+  // Inicializa os botões (pula os pinos dos LEDs)
+  for (int pin = firstPin; pin <= lastPin; pin++) {
+    if (pin != ledPin1 && pin != ledPin2) {
+      pinMode(pin, INPUT_PULLUP);
+    }
+  }
+
+  // Inicializa as fitas
+  fita1.begin();
+  fita2.begin();
+  fita1.show(); // Limpa os LEDs
+  fita2.show();
+}
+
+void loop() {
+  for (int pin = firstPin; pin <= lastPin; pin++) {
+    if (pin == ledPin1 || pin == ledPin2) continue; // pula pinos dos LEDs
+
+    if (digitalRead(pin) == LOW) {
+      Serial.print("Botão pressionado no pino: ");
+      Serial.println(pin);
+
+      // Liga LEDs em azul
+      ligaTodasAsFitas(0, 0, 255);
+
+      delay(300); // Debounce
+    }
+  }
+}
