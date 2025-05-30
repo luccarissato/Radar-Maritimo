@@ -1,11 +1,48 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <Arduino.h> 
-#include <Adafruit_NeoPixel.h>
+#include <Adafruit_NeoPixel.h>   
+// --- BTN ---
+//Pins dos botões do jogador 1 - B(botão)C/L(coluna/linha)1J(jogador)1
+#define BLAJ1 38
+#define BLBJ1 39
+#define BLCJ1 40
+#define BLDJ1 41
+#define BLEJ1 42
+#define BLFJ1 43
 
+#define BC1J1 44
+#define BC2J1 45
+#define BC3J1 46
+#define BC4J1 47
+#define BC5J1 48
+#define BC6J1 49
+
+// Pins dos botões do jogador 2 - B(botão)C/L(coluna/linha)1J(jogador)2
+#define BLAJ2 26
+#define BLBJ2 27
+#define BLCJ2 28
+#define BLDJ2 29
+#define BLEJ2 30
+#define BLFJ2 31
+
+#define BC1J2 32
+#define BC2J2 33
+#define BC3J2 34
+#define BC4J2 35
+#define BC5J2 36
+#define BC6J2 37
+// --- LED ---
+#define LEDPINJ1 22
+#define LEDPINJ2 24
+#define NUMPIXELS 36
+
+Adafruit_NeoPixel pixelsJ1 = Adafruit_NeoPixel(NUMPIXELS, LEDPINJ1, NEO_RGB + NEO_KHZ800);
+  
+Adafruit_NeoPixel pixelsJ2 = Adafruit_NeoPixel(NUMPIXELS, LEDPINJ2, NEO_RGB + NEO_KHZ800);
 // --- LCDs ---
-LiquidCrystal_I2C lcd1(0x27 16, 2);
-LiquidCrystal_I2C lcd2(0x26 16, 2);
+LiquidCrystal_I2C lcd1(0x27, 16, 2);
+LiquidCrystal_I2C lcd2(0x26, 16, 2);
 
 const char* string[] = {
   "", "Hora de navegar!", "Todos a bordo?",
@@ -188,8 +225,9 @@ void setup() {
   lcd1.backlight();
   lcd2.init();
   lcd2.backlight();
-  inicio_jogo_som()
-  Texto(lcd1, 0, 0, string[1], 1, 1, string[2]); //hora de navegar! todos a bordo?
+  
+  inicio_jogo_som();
+  Texto(lcd1, 0, 0, string[1], 1, 1, string[2]); //Hora de navegar! Todos a bordo?
   Texto(lcd2, 0, 0, string[1], 1, 1, string[2]); 
 }
 
