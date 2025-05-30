@@ -1,0 +1,22 @@
+const int firstPin = 1;
+const int lastPin = 60;
+
+void setup() {
+  Serial.begin(9600);
+
+  // Define os pinos de 3 a 26 como entrada com pull-up interno
+  for (int pin = firstPin; pin <= lastPin; pin++) {
+    pinMode(pin, INPUT_PULLUP);
+  }
+}
+
+void loop() {
+  for (int pin = firstPin; pin <= lastPin; pin++) {
+    // Como está com pull-up, o botão pressionado resulta em LOW
+    if (digitalRead(pin) == LOW) {
+      Serial.print("Botão pressionado no pino: ");
+        Serial.println(pin);
+      delay(300); // Pequeno delay para evitar múltiplas leituras rápidas
+    }
+  }
+}
