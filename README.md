@@ -25,7 +25,7 @@
 
 3. Apos as escolhas dos barcos de ambos os jogadores o verdadeiro jogo comeca onde as rodadas ocorrem em quais ambos os jogadores tentam acertar e eliminar os barcos inimigos, o qual ocorre de maneira similar a escolha dos barcos, e dependendo se acertou um pedaco do barco ou a agua, a cor do LED muda juntamente ao som programado de um buzzer e o display, para indicar e mostrar qual foi o resultado da acao do jogador.
 
-4. Sendo o "Loop" de gameplay sendo o apresentado anteriormente, o final do jogo e chegado apos todos os barcos de algum dos dois jogadores forem em sua totalidade acertados, assim uma tela de vitoria aparecera para o jogador vencedor e uma tela de ”Bom jogo, quer jogar novamente?” Para o perdedor, e apos alguns momentos a tela de LEDs retornara para a configuracao inicial antes das modificacoes feitas nas partidas.
+4. Sendo o "Loop" de gameplay sendo o apresentado anteriormente, o final do jogo e chegado apos todos os barcos de algum dos dois jogadores forem em sua totalidade acertados, assim uma tela de vitoria aparecera para o jogador vencedor e apos alguns momentos a tela de LEDs retornara para a configuracao inicial antes das modificacoes feitas nas partidas.
 
 
 
