@@ -19,11 +19,11 @@
 
 
 ## Documentação
-1. Ao Iniciar o Jogo as duas "telas" de LED do jogador 1 e 2, brilham se movendo angularmente em duas cores diferentes dependendo de qual lado esta o jogador, anunciando a iniciacao do jogo Radar Maritimo.
+1. Ao Iniciar o Jogo a "tela" dos jogadores liga anunciando a iniciacao do jogo Radar Maritimo com uma mensagem para o jogador 1 comecar.
 
-2. No proximo "estagio" os jogadores devem escolher em qual posicao seus respectivos barcos devem ser colocados, sendo o barco que ocupa 3 espacos, 2 espacos e 1 espaco respectivamente, e em cada estagio da escolha de posicao dos barcos o jogador escolhe se o barco se direciona verticalmente ou horizontalmente e em quais posicoes adjacentes ele pode ser colocado, e em cada parte das escolhas uma mensagem vai ser mostrada no display(caso o jogador deseje cancelar sua acao passada, deve apertar no botao A 2 vezes rapidamente).
+2. No proximo "estagio" os jogadores devem escolher em qual posicao seus respectivos barcos devem ser colocados, sendo o barco que ocupa 3 espacos, 2 espacos e 1 espaco respectivamente, e em cada estagio da escolha de posicao dos barcos o jogador escolhe se o barco se direciona verticalmente ou horizontalmente e em quais posicoes adjacentes ele pode ser colocado, e em cada parte das escolhas uma mensagem vai ser mostrada no display.
 
-3. Apos as escolhas dos barcos de ambos os jogadores o verdadeiro jogo comeca onde as rodadas ocorrem em quais ambos os jogadores tentam acertar e eliminar os barcos inimigos, o qual ocorre de maneira similar a escolha dos barcos, e dependendo se acertou um pedaco do barco, a agua ou destruiu completamente um barco, a cor do LED muda juntamente ao som programado de um buzzer e o display, para indicar e mostrar qual foi o resultado da acao do jogador.
+3. Apos as escolhas dos barcos de ambos os jogadores o verdadeiro jogo comeca onde as rodadas ocorrem em quais ambos os jogadores tentam acertar e eliminar os barcos inimigos, o qual ocorre de maneira similar a escolha dos barcos, e dependendo se acertou um pedaco do barco ou a agua, a cor do LED muda juntamente ao som programado de um buzzer e o display, para indicar e mostrar qual foi o resultado da acao do jogador.
 
 4. Sendo o "Loop" de gameplay sendo o apresentado anteriormente, o final do jogo e chegado apos todos os barcos de algum dos dois jogadores forem em sua totalidade acertados, assim uma tela de vitoria aparecera para o jogador vencedor e uma tela de ”Bom jogo, quer jogar novamente?” Para o perdedor, e apos alguns momentos a tela de LEDs retornara para a configuracao inicial antes das modificacoes feitas nas partidas.
 
