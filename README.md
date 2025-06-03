@@ -13,13 +13,13 @@
 
 
 ## Sobre
- O Radar Maritmo consiste no jogo Batalha Naval, porem reimaginado e feito de maneira Figital, modificado utilizando o Arduino, C++, transformando o processo analogico e lento de uma batalha naval comum em um processo rapido que
+ O Radar Maritmo consiste no jogo **Batalha Naval**, porem reimaginado e feito de maneira **Figital**, modificado utilizando o Arduino, C++, transformando o processo analogico e lento de uma batalha naval comum em um processo rapido que
  ocorre na velocidade de dois cliques de dois butoes, e automaticamente o sistema verifica caso o inimigo tenha sido atingido ou nao sendo o jogador notificado pelo buzzer, este projeto tem o objetivo de facilitar o entendimento
  do jogo Batalha Naval que normalmente assustaria as pessoas que teriam o interesse de ver o jogo porem as varias marcas, entender como avisar seu inimigo onde voce deseja acertar baseado nas coordenadas, completamente simplificado no Radar Maritimo.
 
 
 ## Documentação
-1. Ao Iniciar o Jogo a "tela" dos jogadores liga anunciando a iniciacao do jogo Radar Maritimo com uma mensagem para o jogador 1 comecar.
+1. Ao Iniciar o Jogo a "tela" dos jogadores liga anunciando a iniciacao do jogo Radar Maritimo com uma mensagem para o **jogador 1** comecar.
 
 2. No proximo "estagio" os jogadores devem escolher em qual posicao seus respectivos barcos devem ser colocados, sendo o barco que ocupa 3 espacos, 2 espacos e 1 espaco respectivamente, e em cada estagio da escolha de posicao dos barcos o jogador escolhe se o barco se direciona verticalmente ou horizontalmente e em quais posicoes adjacentes ele pode ser colocado, e em cada parte das escolhas uma mensagem vai ser mostrada no display.
 
