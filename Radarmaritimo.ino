@@ -7,7 +7,6 @@
 
 Adafruit_NeoPixel fita(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 
-// Botões para linhas (1 a 6)
 int btn1 = 32;
 int btn2 = 33;
 int btn3 = 34;
@@ -15,7 +14,6 @@ int btn4 = 35;
 int btn5 = 36;
 int btn6 = 37;
 
-// Botões para colunas (A a F)
 int btnA = 26;
 int btnB = 27;
 int btnC = 28;
@@ -23,7 +21,6 @@ int btnD = 29;
 int btnE = 30;
 int btnF = 31;
 
-// Estados anteriores dos botões
 bool btnStatesLinha[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 bool btnStatesColuna[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};
 
@@ -39,7 +36,6 @@ struct Intersecao {
   int coluna;
 };
 
-// Grupos iniciais
 Intersecao grupo1[3];
 int totalGrupo1 = 0;
 
@@ -49,7 +45,6 @@ int totalGrupo2 = 0;
 Intersecao grupo3[1];
 int totalGrupo3 = 0;
 
-// Novos grupos para a segunda rodada
 Intersecao novoGrupo1[3];
 int totalNovoGrupo1 = 0;
 
@@ -67,17 +62,14 @@ bool segundaRodada = false;
 bool aguardandoReinicio = false;
 unsigned long tempoFinalizacao = 0;
 
-// Variáveis para controle do modo de ataque
 bool modoAtaque = false;
 bool jogador1Atacando = true;
 bool jogador2Atacando = false;
 unsigned long tempoUltimoAtaque = 0;
 
-
 bool jogoFinalizado = false;
-int vencedor = 0; // 0 = nenhum, 1 = jogador1, 2 = jogador2
+int vencedor = 0;
 unsigned long tempoVitoria = 0;
-
 
 bool acertosJogador1[NUM_LEDS] = {false};
 bool acertosJogador2[NUM_LEDS] = {false};
@@ -88,51 +80,46 @@ LiquidCrystal_I2C lcd1(0x26, 16, 2);
 LiquidCrystal_I2C lcd2(0x27, 16, 2);
 
 int buzzer = 52;
-int tempo = 120; 
+int tempo = 120;
 
 int melody[] = {
-  262, 16,        
-  330, 16,        
-  392, 16,        
-  523, 8,         
-  659, 8        
+  262, 16,
+  330, 16,
+  392, 16,
+  523, 8,
+  659, 8
 };
 
 int notes = sizeof(melody) / sizeof(melody[0]) / 2;
 int wholenote = (60000 * 4) / tempo;
 
-
 int fim_rodada_melody[] = {
-  523, 8,        
-  392, 16,       
-  330, 16,       
-  262, 8        
+  523, 8,
+  392, 16,
+  330, 16,
+  262, 8
 };
 int fim_rodada_notes = sizeof(fim_rodada_melody) / sizeof(fim_rodada_melody[0]) / 2;
 
-
 int fim_jogo_melody[] = {
-  523, 4, 
-  659, 4, 
-  784, 4, 
-  1047, 2 
+  523, 4,
+  659, 4,
+  784, 4,
+  1047, 2
 };
 int fim_jogo_notes = sizeof(fim_jogo_melody) / sizeof(fim_jogo_melody[0]) / 2;
 
-
 int acertou_barco_melody[] = {
-  784, 16, // G5 - sharp, quick tone
-  1047, 8  
+  784, 16,
+  1047, 8
 };
 int acertou_barco_notes = sizeof(acertou_barco_melody) / sizeof(acertou_barco_melody[0]) / 2;
 
-// NEW: Melody for a miss (acertou_agua)
 int acertou_agua_melody[] = {
-  200, 16, // Low C - splash
-  180, 8   // Even lower A - deeper splash
+  200, 16,
+  180, 8
 };
 int acertou_agua_notes = sizeof(acertou_agua_melody) / sizeof(acertou_agua_melody[0]) / 2;
-
 
 void inicio_jogo_som() {
   int divider = 0, noteDuration = 0;
@@ -148,12 +135,11 @@ void inicio_jogo_som() {
     }
 
     tone(buzzer, melody[thisNote], noteDuration * 0.9);
-    delay(noteDuration + 40);   // ⏱️ Pausa extra entre as notas
+    delay(noteDuration + 40);
     noTone(buzzer);
   }
 }
 
-// New function for end of round sound
 void fim_rodada_som() {
   int divider = 0, noteDuration = 0;
 
@@ -173,7 +159,6 @@ void fim_rodada_som() {
   }
 }
 
-// New function for end of game sound
 void fim_jogo_som() {
   int divider = 0, noteDuration = 0;
 
@@ -193,7 +178,6 @@ void fim_jogo_som() {
   }
 }
 
-// Function for a hit sound
 void acertou_barco_som() {
   int divider = 0, noteDuration = 0;
 
@@ -208,12 +192,11 @@ void acertou_barco_som() {
     }
 
     tone(buzzer, acertou_barco_melody[thisNote], noteDuration * 0.9);
-    delay(noteDuration + 10); // Shorter delay for a quicker sound
+    delay(noteDuration + 10);
     noTone(buzzer);
   }
 }
 
-// NEW: Function for a miss sound
 void acertou_agua_som() {
   int divider = 0, noteDuration = 0;
 
@@ -228,12 +211,10 @@ void acertou_agua_som() {
     }
 
     tone(buzzer, acertou_agua_melody[thisNote], noteDuration * 0.9);
-    delay(noteDuration + 20); // Small delay for splash effect
+    delay(noteDuration + 20);
     noTone(buzzer);
   }
 }
-// --- End of Buzzer section ---
-
 
 void Texto(LiquidCrystal_I2C &lcd, int a, int b, const char* texto1, int c, int d, const char* texto2) {
   lcd.clear();
@@ -260,10 +241,10 @@ void resetGame() {
   colunaAtiva = -1;
   linhaHabilitada = false;
   mostrandoLinha = false;
-  vencedor = 0; // Reset winner
+  vencedor = 0;
 
   for (int i = 0; i < NUM_LEDS; i++) {
-    fita.setPixelColor(i, 0); // Turn off all LEDs
+    fita.setPixelColor(i, 0);
     acertosJogador1[i] = false;
     acertosJogador2[i] = false;
     errosJogador1[i] = false;
@@ -272,12 +253,10 @@ void resetGame() {
   fita.show();
 
   Texto(lcd1, 0, 0, "1o Jogador", 0, 1, "Selecione barco3");
-  inicio_jogo_som(); // Adicionado aqui para tocar ao reiniciar o jogo
+  inicio_jogo_som();
 }
 
-
 void reiniciarSistema() {
-
   if (!segundaRodada) {
     segundaRodada = true;
     totalNovoGrupo1 = 0;
@@ -289,7 +268,7 @@ void reiniciarSistema() {
     aguardandoReinicio = false;
 
     for (int i = 0; i < NUM_LEDS; i++) {
-      fita.setPixelColor(i, 0); // Turn off all LEDs
+      fita.setPixelColor(i, 0);
       acertosJogador1[i] = false;
       acertosJogador2[i] = false;
       errosJogador1[i] = false;
@@ -303,9 +282,8 @@ void reiniciarSistema() {
   }
 }
 
-// Checks if a position is already occupied by the current player's own groups
 bool posicaoOcupada(int lin, int col) {
-  if (!segundaRodada) { // Player 1 is placing
+  if (!segundaRodada) {
     for (int i = 0; i < totalGrupo1; i++) {
       if (grupo1[i].linha == lin && grupo1[i].coluna == col) return true;
     }
@@ -315,7 +293,7 @@ bool posicaoOcupada(int lin, int col) {
     for (int i = 0; i < totalGrupo3; i++) {
       if (grupo3[i].linha == lin && grupo3[i].coluna == col) return true;
     }
-  } else { // Player 2 is placing
+  } else {
     for (int i = 0; i < totalNovoGrupo1; i++) {
       if (novoGrupo1[i].linha == lin && novoGrupo1[i].coluna == col) return true;
     }
@@ -329,28 +307,27 @@ bool posicaoOcupada(int lin, int col) {
   return false;
 }
 
-
 bool ehAdjacenteGrupo1(int lin, int col) {
-  if (!segundaRodada) { // Player 1's groups
-    if (totalGrupo1 == 0) return true; // First position can be anywhere
+  if (!segundaRodada) {
+    if (totalGrupo1 == 0) return true;
 
     for (int i = 0; i < totalGrupo1; i++) {
       int diffLin = abs(grupo1[i].linha - lin);
       int diffCol = abs(grupo1[i].coluna - col);
 
       if ((diffLin == 0 && diffCol == 1) || (diffCol == 0 && diffLin == 1)) {
-        return true; // Adjacent horizontally or vertically
+        return true;
       }
     }
-  } else { // Player 2's new groups
-    if (totalNovoGrupo1 == 0) return true; // First position can be anywhere
+  } else {
+    if (totalNovoGrupo1 == 0) return true;
 
     for (int i = 0; i < totalNovoGrupo1; i++) {
       int diffLin = abs(novoGrupo1[i].linha - lin);
       int diffCol = abs(novoGrupo1[i].coluna - col);
 
       if ((diffLin == 0 && diffCol == 1) || (diffCol == 0 && diffLin == 1)) {
-        return true; // Adjacent horizontally or vertically
+        return true;
       }
     }
   }
@@ -358,18 +335,16 @@ bool ehAdjacenteGrupo1(int lin, int col) {
 }
 
 bool ehAdjacenteGrupo2(int lin, int col) {
-  if (!segundaRodada) { // Player 1's groups
-    if (totalGrupo2 == 0) return true; // First position can be anywhere
+  if (!segundaRodada) {
+    if (totalGrupo2 == 0) return true;
 
-    // Only one position for Group 2 to be adjacent to
     int diffLin = abs(grupo2[0].linha - lin);
     int diffCol = abs(grupo2[0].coluna - col);
 
     return (diffLin == 0 && diffCol == 1) || (diffCol == 0 && diffLin == 1);
-  } else { // Player 2's new groups
-    if (totalNovoGrupo2 == 0) return true; // First position can be anywhere
+  } else {
+    if (totalNovoGrupo2 == 0) return true;
 
-    // Only one position for Novo Grupo 2 to be adjacent to
     int diffLin = abs(novoGrupo2[0].linha - lin);
     int diffCol = abs(novoGrupo2[0].coluna - col);
 
@@ -379,13 +354,11 @@ bool ehAdjacenteGrupo2(int lin, int col) {
 
 void adicionarIntersecao(int lin, int col) {
   if (posicaoOcupada(lin, col)) {
-    // If the position is already occupied by the current player's own ships,
-    // don't add it.
     return;
   }
   
   if (modoGrupo1) {
-    if (!segundaRodada) { // Player 1's groups
+    if (!segundaRodada) {
       if (totalGrupo1 < 3) {
         if (totalGrupo1 > 0 && !ehAdjacenteGrupo1(lin, col)) {
           return;
@@ -401,7 +374,7 @@ void adicionarIntersecao(int lin, int col) {
           Texto(lcd1, 3, 0, "Barco 3 OK", 0, 1, "Selecione barco2");
         }
       }
-    } else { // Player 2's new groups
+    } else {
       if (totalNovoGrupo1 < 3) {
         if (totalNovoGrupo1 > 0 && !ehAdjacenteGrupo1(lin, col)) {
           return;
@@ -419,7 +392,7 @@ void adicionarIntersecao(int lin, int col) {
       }
     }
   } else if (modoGrupo2) {
-    if (!segundaRodada) { // Player 1's groups
+    if (!segundaRodada) {
       if (totalGrupo2 < 2) {
         if (totalGrupo2 == 1 && !ehAdjacenteGrupo2(lin, col)) {
           return;
@@ -435,7 +408,7 @@ void adicionarIntersecao(int lin, int col) {
           Texto(lcd1, 3, 0, "Barco 2 OK", 0, 1, "Selecione barco1");
         }
       }
-    } else { // Player 2's new groups
+    } else {
       if (totalNovoGrupo2 < 2) {
         if (totalNovoGrupo2 == 1 && !ehAdjacenteGrupo2(lin, col)) {
           return;
@@ -453,7 +426,7 @@ void adicionarIntersecao(int lin, int col) {
       }
     }
   } else if (modoGrupo3) {
-    if (!segundaRodada) { // Player 1's groups
+    if (!segundaRodada) {
       if (totalGrupo3 < 1) {
         grupo3[totalGrupo3].linha = lin;
         grupo3[totalGrupo3].coluna = col;
@@ -464,11 +437,10 @@ void adicionarIntersecao(int lin, int col) {
           Texto(lcd1, 0, 0, "Concluido!", 0, 1, "Aguardando...");
           aguardandoReinicio = true;
           tempoFinalizacao = millis();
-          // Call the end of round sound for Player 1
           fim_rodada_som();
         }
       }
-    } else { // Player 2's new groups
+    } else {
       if (totalNovoGrupo3 < 1) {
         novoGrupo3[totalNovoGrupo3].linha = lin;
         novoGrupo3[totalNovoGrupo3].coluna = col;
@@ -479,7 +451,6 @@ void adicionarIntersecao(int lin, int col) {
           Texto(lcd1, 0, 0, "Concluido!", 0, 1, "Aguardando...");
           aguardandoReinicio = true;
           tempoFinalizacao = millis();
-          // Call the end of round sound for Player 2
           fim_rodada_som();
         }
       }
@@ -490,14 +461,14 @@ void adicionarIntersecao(int lin, int col) {
 void mostrarColuna(int col) {
   for (int i = 0; i < 6; i++) {
     int index = col + i * 6;
-    fita.setPixelColor(index, fita.Color(255, 50, 0)); // Orange for active column
+    fita.setPixelColor(index, fita.Color(255, 50, 0));
   }
 }
 
 void mostrarLinha(int lin) {
   for (int i = 0; i < 6; i++) {
     int index = lin * 6 + i;
-    fita.setPixelColor(index, fita.Color(0, 0, 139)); // Dark Blue for active row
+    fita.setPixelColor(index, fita.Color(0, 0, 139));
   }
 }
 
@@ -508,8 +479,8 @@ void mostrarIntersecao(int lin, int col, uint32_t cor) {
 
 void mostrarPossiveisIntersecoes() {
   if (modoGrupo1) {
-    if (!segundaRodada) { // Player 1's groups
-      if (totalGrupo1 == 0) return; // No points yet, no possible intersections
+    if (!segundaRodada) {
+      if (totalGrupo1 == 0) return;
       else if (totalGrupo1 == 1) {
         int lin = grupo1[0].linha;
         int col = grupo1[0].coluna;
@@ -519,10 +490,9 @@ void mostrarPossiveisIntersecoes() {
         for (int i = 0; i < 4; i++) {
           int l = possiveis[i][0];
           int c = possiveis[i][1];
-          // Check if position is within bounds and not occupied by player 1's own ships
           if (l >= 0 && l < 6 && c >= 0 && c < 6 && !posicaoOcupada(l, c)) {
             int idx = c + l * 6;
-            fita.setPixelColor(idx, fita.Color(255, 150, 0)); // Light orange for possible adjacent
+            fita.setPixelColor(idx, fita.Color(255, 150, 0));
           }
         }
       }
@@ -532,7 +502,7 @@ void mostrarPossiveisIntersecoes() {
         int lin1 = grupo1[1].linha;
         int col1 = grupo1[1].coluna;
 
-        if (lin0 == lin1) { // Horizontal line
+        if (lin0 == lin1) {
           int minCol = min(col0, col1);
           int maxCol = max(col0, col1);
 
@@ -545,7 +515,7 @@ void mostrarPossiveisIntersecoes() {
             fita.setPixelColor(idx, fita.Color(255, 150, 0));
           }
         }
-        else if (col0 == col1) { // Vertical line
+        else if (col0 == col1) {
           int minLin = min(lin0, lin1);
           int maxLin = max(lin0, lin1);
 
@@ -559,7 +529,7 @@ void mostrarPossiveisIntersecoes() {
           }
         }
       }
-    } else { // Player 2's new groups
+    } else {
       if (totalNovoGrupo1 == 0) return;
       else if (totalNovoGrupo1 == 1) {
         int lin = novoGrupo1[0].linha;
@@ -570,7 +540,6 @@ void mostrarPossiveisIntersecoes() {
         for (int i = 0; i < 4; i++) {
           int l = possiveis[i][0];
           int c = possiveis[i][1];
-          // Check if position is within bounds and not occupied by player 2's own ships
           if (l >= 0 && l < 6 && c >= 0 && c < 6 && !posicaoOcupada(l, c)) {
             int idx = c + l * 6;
             fita.setPixelColor(idx, fita.Color(255, 150, 0));
@@ -613,7 +582,7 @@ void mostrarPossiveisIntersecoes() {
     }
   }
   else if (modoGrupo2) {
-    if (!segundaRodada) { // Player 1's groups
+    if (!segundaRodada) {
       if (totalGrupo2 == 0) return;
       else if (totalGrupo2 == 1) {
         int lin = grupo2[0].linha;
@@ -624,14 +593,13 @@ void mostrarPossiveisIntersecoes() {
         for (int i = 0; i < 4; i++) {
           int l = possiveis[i][0];
           int c = possiveis[i][1];
-          // Check if position is within bounds and not occupied by player 1's own ships
           if (l >= 0 && l < 6 && c >= 0 && c < 6 && !posicaoOcupada(l, c)) {
             int idx = c + l * 6;
             fita.setPixelColor(idx, fita.Color(255, 150, 0));
           }
         }
       }
-    } else { // Player 2's new groups
+    } else {
       if (totalNovoGrupo2 == 0) return;
       else if (totalNovoGrupo2 == 1) {
         int lin = novoGrupo2[0].linha;
@@ -642,7 +610,6 @@ void mostrarPossiveisIntersecoes() {
         for (int i = 0; i < 4; i++) {
           int l = possiveis[i][0];
           int c = possiveis[i][1];
-          // Check if position is within bounds and not occupied by player 2's own ships
           if (l >= 0 && l < 6 && c >= 0 && c < 6 && !posicaoOcupada(l, c)) {
             int idx = c + l * 6;
             fita.setPixelColor(idx, fita.Color(255, 150, 0));
@@ -653,9 +620,8 @@ void mostrarPossiveisIntersecoes() {
   }
 }
 
-// Determines if a coordinate belongs to the current player's opponent's groups
 bool pertenceAosGruposDoOponente(int lin, int col) {
-  if (jogador1Atacando) { // Player 1 is attacking, so check Player 2's groups
+  if (jogador1Atacando) {
     for (int i = 0; i < totalNovoGrupo1; i++) {
       if (novoGrupo1[i].linha == lin && novoGrupo1[i].coluna == col) return true;
     }
@@ -665,7 +631,7 @@ bool pertenceAosGruposDoOponente(int lin, int col) {
     for (int i = 0; i < totalNovoGrupo3; i++) {
       if (novoGrupo3[i].linha == lin && novoGrupo3[i].coluna == col) return true;
     }
-  } else { // Player 2 is attacking, so check Player 1's groups
+  } else {
     for (int i = 0; i < totalGrupo1; i++) {
       if (grupo1[i].linha == lin && grupo1[i].coluna == col) return true;
     }
@@ -683,51 +649,45 @@ void verificarVitoria() {
   int totalLedsOponente = 0;
   int acertosDoJogador = 0;
 
-  if (jogador1Atacando) { // Player 1 is attacking, so check Player 2's groups
+  if (jogador1Atacando) {
     totalLedsOponente = totalNovoGrupo1 + totalNovoGrupo2 + totalNovoGrupo3;
     for (int i = 0; i < NUM_LEDS; i++) {
-      // Convert LED index back to row and column
       int row = i / 6;
       int col = i % 6;
       if (acertosJogador1[i] && pertenceAosGruposDoOponente(row, col)) {
         acertosDoJogador++;
       }
     }
-    // Check if player 1 has hit all of player 2's groups
     if (totalLedsOponente > 0 && acertosDoJogador >= totalLedsOponente) {
       vencedor = 1;
       jogoFinalizado = true;
       tempoVitoria = millis();
       Texto(lcd1, 0, 0, "Vitoria do", 0, 1, "Jogador 1!");
-      // Turn all LEDs green for victory
       for (int i = 0; i < NUM_LEDS; i++) {
-        fita.setPixelColor(i, fita.Color(0, 255, 0)); // Green
+        fita.setPixelColor(i, fita.Color(0, 255, 0));
       }
       fita.show();
-      fim_jogo_som(); // Play victory sound
+      fim_jogo_som();
     }
-  } else { // jogador2Atacando
+  } else {
     totalLedsOponente = totalGrupo1 + totalGrupo2 + totalGrupo3;
     for (int i = 0; i < NUM_LEDS; i++) {
-      // Convert LED index back to row and column
       int row = i / 6;
       int col = i % 6;
       if (acertosJogador2[i] && pertenceAosGruposDoOponente(row, col)) {
         acertosDoJogador++;
       }
     }
-    // Check if player 2 has hit all of player 1's groups
     if (totalLedsOponente > 0 && acertosDoJogador >= totalLedsOponente) {
       vencedor = 2;
       jogoFinalizado = true;
       tempoVitoria = millis();
       Texto(lcd1, 0, 0, "Vitoria do", 0, 1, "Jogador 2!");
-      // Turn all LEDs green for victory
       for (int i = 0; i < NUM_LEDS; i++) {
-        fita.setPixelColor(i, fita.Color(0, 255, 0)); // Green
+        fita.setPixelColor(i, fita.Color(0, 255, 0));
       }
       fita.show();
-      fim_jogo_som(); // Play victory sound
+      fim_jogo_som();
     }
   }
 }
@@ -739,7 +699,6 @@ void iniciarModoAtaque() {
   jogoFinalizado = false;
   vencedor = 0;
 
-  // Clear all LEDs when entering attack mode
   for (int i = 0; i < NUM_LEDS; i++) {
     fita.setPixelColor(i, 0);
     acertosJogador1[i] = false;
@@ -755,52 +714,44 @@ void iniciarModoAtaque() {
 void processarAtaque(int lin, int col) {
   int index = col + lin * 6;
 
-  // Check if the current player has already hit or missed this spot
-  // This check is important to prevent re-processing the same hit/miss
   if ((jogador1Atacando && (acertosJogador1[index] || errosJogador1[index])) ||
       (jogador2Atacando && (acertosJogador2[index] || errosJogador2[index]))) {
-    return; // Already processed this intersection for the current player
+    return;
   }
 
   if (jogador1Atacando) {
-    if (pertenceAosGruposDoOponente(lin, col)) { // Player 1 is attacking Player 2's groups
+    if (pertenceAosGruposDoOponente(lin, col)) {
       acertosJogador1[index] = true;
-      acertou_barco_som(); // Play hit sound!
-      // Do NOT show the LED here. It will be handled in the loop based on the acertos arrays.
+      acertou_barco_som();
       Texto(lcd1, 0, 0, "Acerto!", 0, 1, "Jogador 1 continua");
     } else {
       errosJogador1[index] = true;
-      acertou_agua_som(); // NEW: Play miss sound!
-      // Do NOT show the LED here. It will be handled in the loop based on the erros arrays.
+      acertou_agua_som();
       Texto(lcd1, 0, 0, "Errou!", 0, 1, "Vez do Jogador 2");
-      fita.show(); // Show the miss immediately
-      delay(1000); // 1 SECOND DELAY FOR MISS
+      fita.show();
+      delay(1000);
       jogador1Atacando = false;
       jogador2Atacando = true;
     }
-  } else { // jogador2Atacando
-    if (pertenceAosGruposDoOponente(lin, col)) { // Player 2 is attacking Player 1's groups
+  } else {
+    if (pertenceAosGruposDoOponente(lin, col)) {
       acertosJogador2[index] = true;
-      acertou_barco_som(); // Play hit sound!
-      // Do NOT show the LED here. It will be handled in the loop based on the acertos arrays.
+      acertou_barco_som();
       Texto(lcd1, 0, 0, "Acerto!", 0, 1, "Jogador 2 continua");
     } else {
       errosJogador2[index] = true;
-      acertou_agua_som(); // NEW: Play miss sound!
-      // Do NOT show the LED here. It will be handled in the loop based on the erros arrays.
+      acertou_agua_som();
       Texto(lcd1, 0, 0, "Errou!", 0, 1, "Vez do Jogador 1");
-      fita.show(); // Show the miss immediately
-      delay(1000); // 1 SECOND DELAY FOR MISS
+      fita.show();
+      delay(1000);
       jogador1Atacando = true;
       jogador2Atacando = false;
     }
   }
-  // Immediately refresh the LEDs to show the result of the attack
-  fita.show(); // This line is crucial for the immediate visual feedback
+  fita.show();
   tempoUltimoAtaque = millis();
   verificarVitoria();
 }
-
 
 void setup() {
   Serial.begin(9600);
@@ -827,26 +778,23 @@ void setup() {
 
   lcd2.init();
   lcd2.backlight();
-  lcd2.clear(); // Clear LCD2 on startup
+  lcd2.clear();
 
   Texto(lcd1, 2, 0, "1o Jogador:", 0, 1, "Selecione barco3");
   inicio_jogo_som();
-  // Play the start-game melody
 }
 
 void loop() {
   if (jogoFinalizado) {
-    // Keep victory message on LCD and LEDs for 10 seconds, then reset
-    if (millis() - tempoVitoria >= 10000) { // 10 seconds
+    if (millis() - tempoVitoria >= 10000) {
       resetGame();
     }
-    return; // Don't process any other game logic while finalized
+    return;
   }
 
   if (aguardandoReinicio) {
-    if (millis() - tempoFinalizacao >= 2000) { // 2 seconds delay
+    if (millis() - tempoFinalizacao >= 2000) {
       if (segundaRodada) {
-        // Clear all LEDs and attack/miss flags before starting attack mode
         for (int i = 0; i < NUM_LEDS; i++) {
           fita.setPixelColor(i, 0);
           acertosJogador1[i] = false;
@@ -861,43 +809,40 @@ void loop() {
         reiniciarSistema();
       }
     }
-    return; // Don't process input while awaiting restart
+    return;
   }
 
   int botoesLinha[] = {btn1, btn2, btn3, btn4, btn5, btn6};
   int botoesColuna[] = {btnA, btnB, btnC, btnD, btnE, btnF};
 
-  // Process column buttons
   for (int i = 0; i < 6; i++) {
     bool estadoAtual = digitalRead(botoesColuna[i]);
-    if (btnStatesColuna[i] == HIGH && estadoAtual == LOW) { // Button pressed
+    if (btnStatesColuna[i] == HIGH && estadoAtual == LOW) {
       colunaAtiva = i;
-      linhaAtiva = -1; // Reset active row
+      linhaAtiva = -1;
       linhaHabilitada = true;
       mostrandoLinha = false;
     }
     btnStatesColuna[i] = estadoAtual;
   }
 
-  // Handle temporary display of selected line/column
   if (mostrandoLinha) {
-    if (millis() - tempoLinhaLigada >= 300) { // Display intersection for 300ms
+    if (millis() - tempoLinhaLigada >= 300) {
       mostrandoLinha = false;
-      colunaAtiva = -1; // Clear active column after timeout
-      linhaAtiva = -1; // Clear active row as well
+      colunaAtiva = -1;
+      linhaAtiva = -1;
     }
   }
-  // Process row buttons only if a column is active
   else if (linhaHabilitada) {
     for (int i = 0; i < 6; i++) {
       bool estadoAtual = digitalRead(botoesLinha[i]);
-      if (btnStatesLinha[i] == HIGH && estadoAtual == LOW) { // Button pressed
+      if (btnStatesLinha[i] == HIGH && estadoAtual == LOW) {
         linhaAtiva = i;
         linhaHabilitada = false;
         mostrandoLinha = true;
         tempoLinhaLigada = millis();
 
-        if (colunaAtiva != -1) { // Both row and column selected
+        if (colunaAtiva != -1) {
           if (modoAtaque) {
             processarAtaque(linhaAtiva, colunaAtiva);
           } else {
@@ -908,55 +853,46 @@ void loop() {
       btnStatesLinha[i] = estadoAtual;
     }
   } else {
-    // Keep reading line button states to ensure they are up-to-date even when not actively selecting
     for (int i = 0; i < 6; i++) {
       btnStatesLinha[i] = digitalRead(botoesLinha[i]);
     }
   }
 
-  // Clear all LEDs before drawing current state, unless game is finalized (victory screen)
   if (!jogoFinalizado) {
     for (int i = 0; i < NUM_LEDS; i++) {
-      fita.setPixelColor(i, 0); // Turn off all LEDs
+      fita.setPixelColor(i, 0);
     }
   }
 
-  // Display active column
-  if (colunaAtiva != -1 && !mostrandoLinha && !jogoFinalizado) { // Only show active column if not showing intersection
+  if (colunaAtiva != -1 && !mostrandoLinha && !jogoFinalizado) {
     mostrarColuna(colunaAtiva);
   }
 
-  // Display active row if `mostrandoLinha` is true and game is not finalized
   if (mostrandoLinha && linhaAtiva != -1 && !jogoFinalizado) {
     mostrarLinha(linhaAtiva);
-    // Also show the potential intersection color when both are active
     if (colunaAtiva != -1) {
       if (modoAtaque) {
-        // During attack, briefly show potential hit/miss color
         if (pertenceAosGruposDoOponente(linhaAtiva, colunaAtiva)) {
-            if (jogador1Atacando) mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(0, 255, 0)); // Green for potential hit by P1
-            else mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(0, 0, 255)); // Blue for potential hit by P2
+            if (jogador1Atacando) mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(0, 255, 0));
+            else mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(0, 0, 255));
         } else {
-            mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(255, 0, 0)); // Red for potential miss
+            mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(255, 0, 0));
         }
       } else {
-        // During group placement, show the selected intersection
         if (!segundaRodada) {
-          mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(0, 255, 0)); // Green for Player 1's selection
+          mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(0, 255, 0));
         } else {
-          mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(255, 20, 147)); // Pink for Player 2's selection
+          mostrarIntersecao(linhaAtiva, colunaAtiva, fita.Color(255, 20, 147));
         }
       }
     }
   }
 
-  // Display placed groups or attack marks (only if not in victory screen)
   if (!jogoFinalizado) {
     if (!modoAtaque) {
-      // During group placement, show the placed groups
-      if (!segundaRodada) { // Player 1's groups (initial setup)
+      if (!segundaRodada) {
         for (int i = 0; i < totalGrupo1; i++) {
-          mostrarIntersecao(grupo1[i].linha, grupo1[i].coluna, fita.Color(0, 255, 0)); // Green for Player 1's groups
+          mostrarIntersecao(grupo1[i].linha, grupo1[i].coluna, fita.Color(0, 255, 0));
         }
         for (int i = 0; i < totalGrupo2; i++) {
           mostrarIntersecao(grupo2[i].linha, grupo2[i].coluna, fita.Color(0, 255, 0));
@@ -964,9 +900,9 @@ void loop() {
         for (int i = 0; i < totalGrupo3; i++) {
           mostrarIntersecao(grupo3[i].linha, grupo3[i].coluna, fita.Color(0, 255, 0));
         }
-      } else { // Player 2's groups (second round setup)
+      } else {
         for (int i = 0; i < totalNovoGrupo1; i++) {
-          mostrarIntersecao(novoGrupo1[i].linha, novoGrupo1[i].coluna, fita.Color(255, 20, 147)); // Pink for Player 2's groups
+          mostrarIntersecao(novoGrupo1[i].linha, novoGrupo1[i].coluna, fita.Color(255, 20, 147));
         }
         for (int i = 0; i < totalNovoGrupo2; i++) {
           mostrarIntersecao(novoGrupo2[i].linha, novoGrupo2[i].coluna, fita.Color(255, 20, 147));
@@ -975,26 +911,25 @@ void loop() {
           mostrarIntersecao(novoGrupo3[i].linha, novoGrupo3[i].coluna, fita.Color(255, 20, 147));
         }
       }
-    } else { // In attack mode, show only hits/misses for the current player
+    } else {
       for (int i = 0; i < NUM_LEDS; i++) {
         if (jogador1Atacando) {
           if (acertosJogador1[i]) {
-            fita.setPixelColor(i, fita.Color(0, 255, 0)); // Green for P1's hits
+            fita.setPixelColor(i, fita.Color(0, 255, 0));
           } else if (errosJogador1[i]) {
-            fita.setPixelColor(i, fita.Color(13,33,79)); // Dark Blue for P1's misses
+            fita.setPixelColor(i, fita.Color(13,33,79));
           }
-        } else { // jogador2Atacando
+        } else {
           if (acertosJogador2[i]) {
-            fita.setPixelColor(i, fita.Color(255, 16, 240)); // Light Pink for P2's hits
+            fita.setPixelColor(i, fita.Color(255, 16, 240));
           } else if (errosJogador2[i]) {
-            fita.setPixelColor(i, fita.Color(13,33,79)); // Dark Blue for P2's misses
+            fita.setPixelColor(i, fita.Color(13,33,79));
           }
         }
       }
     }
   }
 
-  // Display possible intersections only during group selection phase
   if (!modoAtaque && (modoGrupo1 || modoGrupo2)) {
     mostrarPossiveisIntersecoes();
   }
