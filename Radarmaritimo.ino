@@ -87,44 +87,42 @@ bool errosJogador2[NUM_LEDS] = {false};
 LiquidCrystal_I2C lcd1(0x26, 16, 2);
 LiquidCrystal_I2C lcd2(0x27, 16, 2);
 
-// --- Buzzer variables and function ---
 int buzzer = 52;
-int tempo = 120; // Tempo musical (BPM)
+int tempo = 120; 
 
 int melody[] = {
-  262, 16,        // C4 - início firme
-  330, 16,        // E4 - subida
-  392, 16,        // G4 - brilho
-  523, 8,         // C5 - auge
-  659, 8        // E5 - final épico
+  262, 16,        
+  330, 16,        
+  392, 16,        
+  523, 8,         
+  659, 8        
 };
 
 int notes = sizeof(melody) / sizeof(melody[0]) / 2;
 int wholenote = (60000 * 4) / tempo;
 
-// New melody for end of round
+
 int fim_rodada_melody[] = {
-  523, 8,        // C5
-  392, 16,       // G4
-  330, 16,       // E4
-  262, 8        // C4
+  523, 8,        
+  392, 16,       
+  330, 16,       
+  262, 8        
 };
 int fim_rodada_notes = sizeof(fim_rodada_melody) / sizeof(fim_rodada_melody[0]) / 2;
 
-// New melody for end of game (victory)
+
 int fim_jogo_melody[] = {
-  523, 4, // C5
-  659, 4, // E5
-  784, 4, // G5
-  1047, 2 // C6 - high triumph!
+  523, 4, 
+  659, 4, 
+  784, 4, 
+  1047, 2 
 };
 int fim_jogo_notes = sizeof(fim_jogo_melody) / sizeof(fim_jogo_melody[0]) / 2;
 
 
-// Melody for a hit (acerto)
 int acertou_barco_melody[] = {
   784, 16, // G5 - sharp, quick tone
-  1047, 8  // C6 - higher, distinct
+  1047, 8  
 };
 int acertou_barco_notes = sizeof(acertou_barco_melody) / sizeof(acertou_barco_melody[0]) / 2;
 
