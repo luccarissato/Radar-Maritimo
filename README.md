@@ -69,7 +69,7 @@ A proposta é eliminar as barreiras de entendimento do jogo original — como co
 4. Faça o upload do código para o Arduino.
 
 
-## Equipe 
+## 👥 Equipe 
 
 |                 **Igor Gabriel**                  |                    **Lucca Rissato**                    |                   **Daniel dos Santos**                   |          
 | :------------------------------------------------: | :------------------------------------------------------: | :--------------------------------------------------: | 
