@@ -37,7 +37,7 @@ A proposta é eliminar as dificuldades de entendimento do jogo original — como
    - Posição inicial (via botões horizontais).
    - Direção (via botões vertical).
    - O display guia todo o processo com mensagens claras de qual barco deverá ser selecionado.
-   - Logo após o posicionamento do **jogador 1** irá iniciar o posicionamento do **jogador 2** e tudo se repitirá
+   - Logo após o posicionamento do **jogador 1** irá iniciar o posicionamento do **jogador 2** e tudo se repetirá
 
 3. **Rodadas de Ataque**
    - Os jogadores se revezam atacando posições do tabuleiro adversário.
