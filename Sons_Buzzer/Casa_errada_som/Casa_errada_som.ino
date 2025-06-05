@@ -1,11 +1,10 @@
 int buzzer = 7;
 int tempo = 100;
-
 int melody[] = {
-  330, 16,   // E4
-  294, 16,   // D4
-  277, 16,   // C#4
-  262, 8     // C4
+  330, 16,
+  294, 16,
+  277, 16,
+  262, 8
 };
 
 int notes = sizeof(melody) / sizeof(melody[0]) / 2;
@@ -14,10 +13,9 @@ int wholenote = (60000 * 4) / tempo;
 void casa_errada_som() {
   int divider = 0, noteDuration = 0;
 
-  // Toca a sequência descendente
   for (int thisNote = 0; thisNote < notes * 2; thisNote += 2) {
     divider = melody[thisNote + 1];
-    
+
     if (divider > 0) {
       noteDuration = (wholenote) / divider;
     } else {
@@ -30,15 +28,11 @@ void casa_errada_som() {
     noTone(buzzer);
   }
 
-  // Som final de dúvida ou erro
-  tone(buzzer, 740, 200);  // F#5
+  tone(buzzer, 740, 200);
   delay(200);
   noTone(buzzer);
 }
 
-void setup() {
-}
+void setup() { }
 
-void loop() {
-  // vazio — não repete
-}
+void loop() { }
