@@ -22,7 +22,7 @@
 
 A proposta é eliminar as dificuldades de entendimento do jogo original — como coordenadas e marcações complexas — e permitir que qualquer pessoa jogue de forma simples, utilizando somente de **botões e leds**. As jogadas são processadas automaticamente, com **feedback visual e sonoro**, tornando a experiência mais dinâmica e educativa.
 
-![Site](https://sites.google.com/d/1tSHFSn6spUILjA6oEXaHgu8bMZuuEwUy/p/1knj-OkKjhRbKZyLP4hsyLuhye7VeHsJT/edit )
+[Site](https://sites.google.com/d/1tSHFSn6spUILjA6oEXaHgu8bMZuuEwUy/p/1knj-OkKjhRbKZyLP4hsyLuhye7VeHsJT/edit )
 
 ---
 
