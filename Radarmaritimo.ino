@@ -2,9 +2,10 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-// Pino do LED e numéro de LEDs totais na matriz
+// Pino do LED e número de LEDs totais na matriz
 #define PIN 50
 #define NUM_LEDS 36
+#define DELAY_MS 50 // Define o delay para a animação da cascata em milissegundos
 
 // declarando a fita LED
 Adafruit_NeoPixel fita(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
@@ -81,7 +82,7 @@ bool jogador1Atacando = true;
 bool jogador2Atacando = false;
 unsigned long tempoUltimoAtaque = 0;
 
-// ativa o fim de jogo, indica quem venceu e o momento em que o jogador venceu 
+// ativa o fim de jogo, indica quem venceu e o momento em que o jogador venceu
 bool jogoFinalizado = false;
 int vencedor = 0;
 unsigned long tempoVitoria = 0;
@@ -252,6 +253,52 @@ void Texto(LiquidCrystal_I2C &lcd, int a, int b, const char* texto1, int c, int 
   lcd.print(texto2);
 }
 
+// Esta função exibe a cascata azul até que um botão seja pressionado.
+void cascataAzulAteBotao() {
+  // Mapeia os botões das linhas e colunas para facilitar a iteração
+  int botoesLinha[] = {btn1, btn2, btn3, btn4, btn5, btn6};
+  int botoesColuna[] = {btnA, btnB, btnC, btnD, btnE, btnF};
+
+  // Loop da animação até que um botão seja pressionado
+  while (true) {
+    // Acende os LEDs em azul do início ao fim
+    for (int i = 0; i < NUM_LEDS; i++) {
+      fita.setPixelColor(i, fita.Color(0, 0, 255)); // Cor azul
+      fita.show();
+      delay(DELAY_MS);
+
+      // Checa se algum botão foi pressionado
+      for (int j = 0; j < 6; j++) {
+        // Verifica botões de linha e coluna
+        if (digitalRead(botoesLinha[j]) == LOW || digitalRead(botoesColuna[j]) == LOW) {
+          fita.clear(); // Limpa todos os LEDs
+          fita.show();
+          return; // Sai da função imediatamente
+        }
+      }
+    }
+
+    delay(500); // Pausa antes de apagar
+
+    // Apaga os LEDs do fim ao início
+    for (int i = NUM_LEDS - 1; i >= 0; i--) {
+      fita.setPixelColor(i, 0); // Desliga o LED
+      fita.show();
+      delay(DELAY_MS);
+
+      // Checa se algum botão foi pressionado
+      for (int j = 0; j < 6; j++) {
+        // Verifica botões de linha e coluna
+        if (digitalRead(botoesLinha[j]) == LOW || digitalRead(botoesColuna[j]) == LOW) {
+          fita.clear(); // Limpa todos os LEDs
+          fita.show();
+          return; // Sai da função imediatamente
+        }
+      }
+    }
+  }
+}
+
 // quando um jogo chega ao fim, redefine todas as variáveis alteradas para o estado original, apaga os LEDs
 // e mostra a mensagem para o jogador selecionar o barco de 3 casas
 void resetGame() {
@@ -281,6 +328,9 @@ void resetGame() {
     errosJogador2[i] = false;
   }
   fita.show();
+
+  // Chama a animação novamente quando o jogo é resetado após uma vitória
+  cascataAzulAteBotao();
 
   Texto(lcd1, 0, 0, "1o Jogador", 0, 1, "Selecione barco3");
   inicio_jogo_som();
@@ -389,13 +439,13 @@ bool ehAdjacenteGrupo2(int lin, int col) {
   }
 }
 
-// essa função adiciona a posição do barco inserida pelo jogador 
+// essa função adiciona a posição do barco inserida pelo jogador
 // por meio da intersecção linha/coluna ao seu respectivo grupo (que tipo de barco é)
 void adicionarIntersecao(int lin, int col) {
   if (posicaoOcupada(lin, col)) {
     return;
   }
-  
+
   if (modoGrupo1) {
     if (!segundaRodada) {
       if (totalGrupo1 < 3) {
@@ -805,6 +855,7 @@ void setup() {
   fita.begin();
   fita.show();
 
+  // **MODIFICAÇÃO AQUI: Configure os pinos dos botões ANTES da animação.**
   pinMode(btn1, INPUT_PULLUP);
   pinMode(btn2, INPUT_PULLUP);
   pinMode(btn3, INPUT_PULLUP);
@@ -818,6 +869,13 @@ void setup() {
   pinMode(btnD, INPUT_PULLUP);
   pinMode(btnE, INPUT_PULLUP);
   pinMode(btnF, INPUT_PULLUP);
+
+  // **MODIFICAÇÃO AQUI: Adicione um pequeno atraso para estabilizar as leituras dos botões.**
+  delay(200); // 200 milissegundos é um valor comum para garantir estabilidade
+
+  // Chame a função de cascata azul no início do jogo.
+  // A animação será exibida até que o jogador 1 clique em qualquer botão.
+  cascataAzulAteBotao();
 
   lcd1.init();
   lcd1.backlight();
@@ -879,7 +937,7 @@ void loop() {
     btnStatesColuna[i] = estadoAtual;
   }
 
-  // delimita o tempo que a linha selecionada fica acesa 
+  // delimita o tempo que a linha selecionada fica acesa
   if (mostrandoLinha) {
     if (millis() - tempoLinhaLigada >= 300) {
       mostrandoLinha = false;
