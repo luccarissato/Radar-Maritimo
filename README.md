@@ -13,6 +13,7 @@
 - [🚀 Como Executar](#-como-executar)
 - [👥 Equipe](#-equipe)
 - [📝 Licença](#-licença)
+- [🌐 Site](https://sites.google.com/d/1tSHFSn6spUILjA6oEXaHgu8bMZuuEwUy/p/1knj-OkKjhRbKZyLP4hsyLuhye7VeHsJT/edit)
 
 ---
 
@@ -21,8 +22,6 @@
 **Radar Marítimo** é uma versão automatizada e interativa do tradicional jogo **Batalha Naval**, transformada com a ajuda do Arduino e programação em C++. O projeto visa tornar o jogo mais acessível, rápido e imersivo, utilizando componentes como **botões, LEDs, buzzers e displays LCD I2C**.
 
 A proposta é eliminar as dificuldades de entendimento do jogo original — como coordenadas e marcações complexas — e permitir que qualquer pessoa jogue de forma simples, utilizando somente de **botões e leds**. As jogadas são processadas automaticamente, com **feedback visual e sonoro**, tornando a experiência mais dinâmica e educativa.
-
-[Site](https://sites.google.com/d/1tSHFSn6spUILjA6oEXaHgu8bMZuuEwUy/p/1knj-OkKjhRbKZyLP4hsyLuhye7VeHsJT/edit )
 
 ---
 
