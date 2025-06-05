@@ -80,3 +80,5 @@ A proposta é eliminar as dificuldades de entendimento do jogo original — como
 Veja a lista de [colaboradores](https://github.com/luccarissato/Radar-Maritimo/graphs/contributors).
 
 ## 📝 Licença
+
+Radar Marítimo está licenciado sob a licença MIT, e foi desenvolvido com base em exemplos e ideias do ecossistema Arduino. Veja o arquivo LICENSE para mais informações.
