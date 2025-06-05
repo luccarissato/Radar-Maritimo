@@ -12,16 +12,15 @@
 - [📚 Documentação](#-documentação)
 - [🚀 Como Executar](#-como-executar)
 - [👥 Equipe](#-equipe)
-- [📎 Artigos Relacionados](#-artigos-relacionados)
 - [📝 Licença](#-licença)
 
 ---
 
 ## 🔍 Sobre
 
-**Radar Marítimo** é uma versão automatizada e interativa do tradicional jogo **Batalha Naval**, transformada com a ajuda do Arduino e programação em C++. O projeto visa tornar o jogo mais acessível, rápido e imersivo, utilizando componentes como **botões, LEDs, buzzers e displays LCD**.
+**Radar Marítimo** é uma versão automatizada e interativa do tradicional jogo **Batalha Naval**, transformada com a ajuda do Arduino e programação em C++. O projeto visa tornar o jogo mais acessível, rápido e imersivo, utilizando componentes como **botões, LEDs, buzzers e displays LCD I2C**.
 
-A proposta é eliminar as barreiras de entendimento do jogo original — como coordenadas e marcações complexas — e permitir que qualquer pessoa jogue de forma simples, utilizando apenas dois botões. As jogadas são processadas automaticamente, com **feedback visual e sonoro**, tornando a experiência mais dinâmica e educativa.
+A proposta é eliminar as dificuldades de entendimento do jogo original — como coordenadas e marcações complexas — e permitir que qualquer pessoa jogue de forma simples, utilizando somente de **botões e leds**. As jogadas são processadas automaticamente, com **feedback visual e sonoro**, tornando a experiência mais dinâmica e educativa.
 
 ---
 
@@ -34,19 +33,20 @@ A proposta é eliminar as barreiras de entendimento do jogo original — como co
 
 2. **Posicionamento dos Barcos**
    - Cada jogador posiciona seus barcos (tamanhos 3, 2 e 1) escolhendo:
-     - Direção (horizontal ou vertical).
-     - Posição inicial (via botões).
-   - O display guia todo o processo com mensagens claras.
+   - Posição inicial (via botões horizontais).
+   - Direção (via botões vertical).
+   - O display guia todo o processo com mensagens claras de qual barco deverá ser selecionado.
+   - Logo após o posicionamento do **jogador 1** irá iniciar o posicionamento do **jogador 2** e tudo se repitirá
 
 3. **Rodadas de Ataque**
-   - Os jogadores se revezam atacando posições no tabuleiro adversário.
+   - Os jogadores se revezam atacando posições do tabuleiro adversário.
    - O sistema indica automaticamente:
-     - **Acerto**: LED de cor correspondente + som de acerto + mensagem no display.
-     - **Erro (água)**: LED diferente + som específico + mensagem no display.
+   - **Acerto**: LED de cor correspondente ao jogador (verde ou rosa) + som de acerto + mensagem no display.
+   - **Erro (água)**: LED azul + som de erro + mensagem no display.
 
 4. **Condições de Vitória**
-   - O jogo termina quando todos os barcos de um jogador forem destruídos.
-   - O vencedor é anunciado no display, seguido de uma animação e reset visual do sistema.
+   - O jogo termina quando todos os barcos de um jogador forem **destruídos**.
+   - O vencedor é anunciado no display, seguido de todos os leds ligarem verdes e reset do jogo/sistema.
 
 ---
 
@@ -54,8 +54,8 @@ A proposta é eliminar as barreiras de entendimento do jogo original — como co
 
 ### ✅ Bibliotecas necessárias
 
-- Neopixel
-- 
+- Adafruit_NeoPixel.h
+- LiquidCrystal_I2C.h
 
 ### 📦 Instalação
 
@@ -77,12 +77,5 @@ A proposta é eliminar as barreiras de entendimento do jogo original — como co
 |           **Displays e Logica De Jogo**           |              **Leds e Logica De Jogo**               |     **Sonoplastia**      |             
 
 Veja a lista de [colaboradores](https://github.com/luccarissato/Radar-Maritimo/graphs/contributors).
-
-## 📎Artigos relacionados
-[🧠 Logica](https://www.canva.com/design/DAGmTMpjgZU/M6ENvyQbRjVcPlpwgezG6w/edit)
-
-[💡 LEDs](https://docs.google.com/document/d/1Sy9DZSqPzpIKdoNRvKYAcvU3oX75fMmVJiSy4DJXtCE/edit?tab=t.0)
-
-[📝 Rascunho Da Logica](https://docs.google.com/document/d/1cCqNBBMvbgPbsKnjYv-kbeMVeqmdhjC4WygrdKPP7Q8/edit?tab=t.0)
 
 ## 📝 Licença
