@@ -2,11 +2,11 @@ int buzzer = 7;
 int tempo = 120;
 
 int melody[] = {
-  262, 16,   // C4 - início firme
-  330, 16,   // E4 - subida
-  392, 16,   // G4 - brilho
-  523, 8,    // C5 - auge
-  659, 8     // E5 - final épico
+  262, 16,
+  330, 16,
+  392, 16,
+  523, 8,
+  659, 8
 };
 
 int notes = sizeof(melody) / sizeof(melody[0]) / 2;
@@ -23,10 +23,10 @@ void inicio_jogo_som() {
     } else {
       noteDuration = (wholenote) / abs(divider);
       noteDuration *= 1.5;
-    }	
+    }
 
     tone(buzzer, melody[thisNote], noteDuration * 0.9);
-    delay(noteDuration + 40);  // ⏱️ Pausa extra entre as notas
+    delay(noteDuration + 40);
     noTone(buzzer);
   }
 }
