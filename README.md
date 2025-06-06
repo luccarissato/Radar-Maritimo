@@ -1,6 +1,6 @@
 # 🚢 Radar Marítimo
 
-![Radar Marítimo Banner](https://github.com/user-attachments/assets/aaa78436-055c-4b55-be8c-6c2bfae3a786)
+![RadarMaritimo](https://github.com/user-attachments/assets/f47fb179-5355-429d-b35e-64a3032a12f6)
 
 > Uma reinterpretação moderna do clássico *Batalha Naval* — automatizado com botões e LEDs para proporcionar uma experiência interativa, acessível e divertida.
 
